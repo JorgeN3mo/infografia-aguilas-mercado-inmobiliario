@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía del Mercado Inmobiliario: Águilas (con IA)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues (#0B2447, #19376D, #576CBC, #A5D7E8) -->
+    <!-- Application Structure Plan: The infographic follows a narrative structure. 1) Hook: Key stats. 2) Market Context: Price hierarchy chart. 3) Core Insight: Investment strategies. 4) AI Advisor: Interactive recommendation. 5) Detailed Listings [NEW]: Interactive tables showing specific property opportunities by zone. 6) Deeper Analysis: Bank asset risks. 7) Conclusion: Takeaways. The new section adds a data-rich layer for users who want to drill down into specific listings. -->
+    <!-- Visualization & Content Choices: 1. Market Growth: Big Number (HTML). 2. Price Hierarchy: Bar Chart (Chart.js). 3. Strategies: HTML cards. 4. AI Advisor: HTML form + Gemini API. 5. Detailed Listings [NEW]: Data Point -> Specific property data tables from the report. Goal -> Organize/Inform. Viz -> Interactive HTML Tables with JS-powered tabs/filters. Justification -> Presents dense, tabular data in a structured, non-overwhelming way. 6. Bank Asset Risks: HTML Flow Diagram. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F8FF;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 500px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        .bg-primary { background-color: #0B2447; }
+        .text-primary { color: #0B2447; }
+        .bg-secondary { background-color: #19376D; }
+        .text-secondary { color: #19376D; }
+        .bg-accent { background-color: #576CBC; }
+        .text-accent { color: #576CBC; }
+        .bg-light { background-color: #A5D7E8; }
+        .text-light { color: #A5D7E8; }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #576CBC;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-[#F0F8FF] text-primary">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-primary uppercase">Mercado Inmobiliario de Águilas</h1>
+            <p class="text-xl md:text-2xl text-accent font-semibold mt-2">Una Guía Visual para la Inversión Inteligente</p>
+        </header>
+
+        <section id="market-growth" class="mb-12 md:mb-20">
+            <div class="text-center bg-primary text-white p-8 md:p-12 rounded-2xl shadow-2xl max-w-5xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-light mb-4">Un Mercado en Plena Ebullición</h2>
+                <p class="text-lg text-slate-300 mb-6">El mercado de Águilas está experimentando una apreciación sin precedentes, haciendo que la búsqueda de "gangas" sea un desafío estratégico. La clave no es encontrar lo más barato, sino el mayor valor relativo.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-secondary p-6 rounded-xl">
+                        <p class="text-5xl md:text-6xl font-black text-white">+26.2%</p>
+                        <p class="font-semibold text-light mt-2">Aumento de Precio Interanual</p>
+                    </div>
+                    <div class="bg-secondary p-6 rounded-xl">
+                        <p class="text-5xl md:text-6xl font-black text-white">1.400€</p>
+                        <p class="font-semibold text-light mt-2">Línea Base del m² Asequible</p>
+                    </div>
+                    <div class="bg-secondary p-6 rounded-xl">
+                        <p class="text-5xl md:text-6xl font-black text-white">2</p>
+                        <p class="font-semibold text-light mt-2">Estrategias Clave de Valor</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="price-hierarchy" class="mb-12 md:mb-20">
+            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">La Jerarquía de Precios por Zona</h2>
+                <p class="text-center text-accent mb-8 max-w-3xl mx-auto">El valor de un inmueble en Águilas está directamente ligado a su ubicación. Este gráfico muestra la clara estratificación de precios por metro cuadrado, desde el lujo de Isla del Fraile hasta las oportunidades en Las Majadas.</p>
+                <div class="chart-container">
+                    <canvas id="priceHierarchyChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="investment-strategies" class="mb-12 md:mb-20">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-8">Dos Caminos Hacia el Valor</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-xl p-8 border-t-8 border-accent">
+                    <h3 class="text-2xl font-bold text-secondary mb-4">Estrategia 1: Valor por Reforma</h3>
+                    <p class="text-slate-600 mb-6">Esta estrategia se enfoca en adquirir propiedades antiguas pero espaciosas en ubicaciones céntricas a un bajo precio por metro cuadrado. La inversión se materializa al reformar el inmueble para crear una vivienda moderna en una zona premium, generando una alta plusvalía.</p>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p><span class="font-bold text-secondary">Zona Objetivo:</span> Centro / Casco Antiguo</p>
+                        <p><span class="font-bold text-secondary">Clave:</span> Presupuesto para reforma integral</p>
+                        <p><span class="font-bold text-secondary">Resultado:</span> Alto potencial de revalorización</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-xl p-8 border-t-8 border-light">
+                    <h3 class="text-2xl font-bold text-secondary mb-4">Estrategia 2: Valor por Precio Absoluto</h3>
+                    <p class="text-slate-600 mb-6">Consiste en buscar el precio de entrada más bajo posible, aceptando una ubicación menos céntrica pero funcional. Ideal para inversores con un presupuesto ajustado que quieren acceder a la propiedad con una inversión inicial mínima.</p>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p><span class="font-bold text-secondary">Zona Objetivo:</span> Las Majadas / Las Molinetas</p>
+                        <p><span class="font-bold text-secondary">Clave:</span> Aceptar ubicación periférica</p>
+                        <p><span class="font-bold text-secondary">Resultado:</span> Mínimo desembolso inicial</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai-advisor" class="mb-12 md:mb-20">
+             <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl max-w-4xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">Asesor de Estrategia con IA ✨</h2>
+                <p class="text-center text-accent mb-8 max-w-3xl mx-auto">¿No estás seguro de qué camino tomar? Introduce tus datos y deja que nuestra IA analice tu perfil para darte una recomendación personalizada.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label for="budget" class="block text-sm font-medium text-secondary">Presupuesto Total (€)</label>
+                        <input type="number" id="budget" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm" placeholder="Ej: 80000">
+                    </div>
+                     <div>
+                        <label for="risk" class="block text-sm font-medium text-secondary">Tolerancia al Riesgo</label>
+                        <select id="risk" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm">
+                            <option>Baja</option>
+                            <option selected>Media</option>
+                            <option>Alta</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="experience" class="block text-sm font-medium text-secondary">Experiencia en Reformas</label>
+                        <select id="experience" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm">
+                            <option>Ninguna</option>
+                            <option selected>Poca</option>
+                            <option>Bastante</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="analyze-button" class="bg-secondary hover:bg-primary text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                        Analizar mi Perfil
+                    </button>
+                </div>
+
+                <div id="ai-result" class="mt-8 p-6 bg-blue-50 rounded-lg border-l-4 border-accent hidden">
+                    <h4 class="text-lg font-bold text-secondary mb-2">Recomendación de la IA:</h4>
+                    <div id="loader" class="loader hidden"></div>
+                    <p id="recommendation-text" class="text-slate-700"></p>
+                </div>
+             </div>
+        </section>
+
+        <section id="detailed-listings" class="mb-12 md:mb-20">
+            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">Catálogo de Oportunidades Detallado</h2>
+                <p class="text-center text-accent mb-8 max-w-3xl mx-auto">Explore los listados específicos de inmuebles asequibles identificados en las zonas de oportunidad clave. Utilice los botones para cambiar entre zonas.</p>
+                
+                <div class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="table-filter-btn bg-secondary text-white px-4 py-2 rounded-full font-medium" data-table="majadas">Las Majadas</button>
+                    <button class="table-filter-btn bg-blue-100 text-secondary px-4 py-2 rounded-full font-medium" data-table="centro">Centro / Casco Antiguo</button>
+                    <button class="table-filter-btn bg-blue-100 text-secondary px-4 py-2 rounded-full font-medium" data-table="collados">Los Collados / Calabardina</button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table id="table-majadas" class="w-full text-sm text-left text-gray-500 listings-table">
+                        <thead class="text-xs text-secondary uppercase bg-blue-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Dirección</th>
+                                <th scope="col" class="px-6 py-3">Precio (€)</th>
+                                <th scope="col" class="px-6 py-3">Superficie (m²)</th>
+                                <th scope="col" class="px-6 py-3">Precio/m² (€)</th>
+                                <th scope="col" class="px-6 py-3">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Maestro Gines Ortiz Ramirez</td><td class="px-6 py-4">26,700</td><td class="px-6 py-4">69</td><td class="px-6 py-4 font-bold">387</td><td class="px-6 py-4">2 hab, 2 baños, parking. Precio muy bajo.</td></tr>
+                            <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Ctra Prolongación Virgen de Lourdes</td><td class="px-6 py-4">29,000</td><td class="px-6 py-4">64</td><td class="px-6 py-4 font-bold">453</td><td class="px-6 py-4">2 hab, 1 baño, parking.</td></tr>
+                            <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Quico y Maldonado</td><td class="px-6 py-4">37,500</td><td class="px-6 py-4">106</td><td class="px-6 py-4 font-bold">354</td><td class="px-6 py-4">4 hab, 2 baños. Excelente ratio tamaño/precio.</td></tr>
+                            <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Pianista Adolfo Olivares Soto</td><td class="px-6 py-4">41,500</td><td class="px-6 py-4">71</td><td class="px-6 py-4 font-bold">585</td><td class="px-6 py-4">3 hab, 2 baños.</td></tr>
+                             <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Piso en Las Majadas (Idealista)</td><td class="px-6 py-4">41,500</td><td class="px-6 py-4">96</td><td class="px-6 py-4 font-bold">432</td><td class="px-6 py-4">3 hab, 2 aseos. Perfecto para familias.</td></tr>
+                        </tbody>
+                    </table>
+                     <table id="table-centro" class="w-full text-sm text-left text-gray-500 listings-table hidden">
+                        <thead class="text-xs text-secondary uppercase bg-blue-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Dirección</th>
+                                <th scope="col" class="px-6 py-3">Precio (€)</th>
+                                <th scope="col" class="px-6 py-3">Superficie (m²)</th>
+                                <th scope="col" class="px-6 py-3">Precio/m² (€)</th>
+                                <th scope="col" class="px-6 py-3">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Manzanera</td><td class="px-6 py-4">35,000</td><td class="px-6 py-4">55</td><td class="px-6 py-4 font-bold">636</td><td class="px-6 py-4">1 hab, a reformar. Ideal para inversor individual.</td></tr>
+                           <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Escaleras</td><td class="px-6 py-4">39,700</td><td class="px-6 py-4">72</td><td class="px-6 py-4 font-bold">551</td><td class="px-6 py-4">3 hab, a reformar. Oportunidad en casa unifamiliar.</td></tr>
+                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Calle Floridablanca</td><td class="px-6 py-4">73,000</td><td class="px-6 py-4">79</td><td class="px-6 py-4 font-bold">924</td><td class="px-6 py-4">Bajos, 2 hab, 1 baño. Precio competitivo.</td></tr>
+                           <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Casa en Casco Antiguo (Fotocasa)</td><td class="px-6 py-4">95,000</td><td class="px-6 py-4">140</td><td class="px-6 py-4 font-bold">679</td><td class="px-6 py-4">4 hab, 2 baños. Necesita reforma, gran superficie.</td></tr>
+                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Calle Doctor Luis Prieto</td><td class="px-6 py-4">110,000</td><td class="px-6 py-4">110</td><td class="px-6 py-4 font-bold">1,000</td><td class="px-6 py-4">4 hab, 4ª planta con ascensor. Gran oportunidad.</td></tr>
+                        </tbody>
+                    </table>
+                    <table id="table-collados" class="w-full text-sm text-left text-gray-500 listings-table hidden">
+                        <thead class="text-xs text-secondary uppercase bg-blue-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Dirección</th>
+                                <th scope="col" class="px-6 py-3">Precio (€)</th>
+                                <th scope="col" class="px-6 py-3">Superficie (m²)</th>
+                                <th scope="col" class="px-6 py-3">Precio/m² (€)</th>
+                                <th scope="col" class="px-6 py-3">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Apartamento Los Collados</td><td class="px-6 py-4">95,000</td><td class="px-6 py-4">65</td><td class="px-6 py-4 font-bold">1,462</td><td class="px-6 py-4">Garaje incluido. Rebajado un 21%.</td></tr>
+                           <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Apartamento en Calabardina</td><td class="px-6 py-4">98,000</td><td class="px-6 py-4">80</td><td class="px-6 py-4 font-bold">1,225</td><td class="px-6 py-4">2ª planta con ascensor, aire acondicionado.</td></tr>
+                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Apartamento Los Collados</td><td class="px-6 py-4">100,000</td><td class="px-6 py-4">58</td><td class="px-6 py-4 font-bold">1,724</td><td class="px-6 py-4">Rebajado 20.000€.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="bank-assets-flow" class="mb-12 md:mb-20">
+            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">El Laberinto de los Activos Bancarios</h2>
+                <p class="text-center text-accent mb-10 max-w-3xl mx-auto">Una parte importante de las ofertas económicas proviene de bancos, pero no todas son iguales. Comprender su tipología es crucial para evitar riesgos inesperados. Este diagrama simplifica el proceso de decisión.</p>
+                <div class="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-0">
+                    <div class="p-4 bg-secondary text-white rounded-lg shadow-md text-center font-bold">Punto de Partida:<br>Activo Bancario</div>
+                    <div class="h-8 md:h-auto w-1 md:w-16 bg-accent"></div>
+                    <div class="flex flex-col gap-4 w-full md:w-auto">
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-1 bg-accent"></div>
+                            <div class="flex-1 border-2 border-emerald-500 bg-emerald-50 p-4 rounded-lg shadow-md">
+                                <h4 class="font-bold text-emerald-800">✅ Venta Directa</h4>
+                                <p class="text-sm text-slate-600">El banco es propietario. Se puede visitar y financiar. <br><span class="font-bold">Riesgo: Bajo</span></p>
+                            </div>
+                        </div>
+                         <div class="flex items-center gap-4">
+                            <div class="w-8 h-1 bg-accent"></div>
+                            <div class="flex-1 border-2 border-rose-500 bg-rose-50 p-4 rounded-lg shadow-md">
+                                <h4 class="font-bold text-rose-800">⚠️ Inmueble Ocupado</h4>
+                                <p class="text-sm text-slate-600">Vendido con ocupantes ilegales. No se visita, no se financia. El comprador asume el desahucio. <br><span class="font-bold">Riesgo: Muy Alto</span></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-8 h-1 bg-accent"></div>
+                            <div class="flex-1 border-2 border-amber-500 bg-amber-50 p-4 rounded-lg shadow-md">
+                                <h4 class="font-bold text-amber-800">⚖️ Cesión de Remate / Sin Posesión</h4>
+                                <p class="text-sm text-slate-600">Operaciones complejas para expertos. Se compra un derecho o un inmueble de estado desconocido. <br><span class="font-bold">Riesgo: Alto</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 md:mt-20 pt-8 border-t border-accent">
+            <h3 class="text-2xl font-bold text-primary">Conclusión para el Inversor</h3>
+            <p class="text-slate-600 max-w-4xl mx-auto mt-4">En el dinámico mercado de Águilas, la oportunidad no reside en el precio más bajo, sino en la estrategia correcta. Ya sea revitalizando el corazón histórico de la ciudad o asegurando una entrada asequible en sus barrios residenciales, el éxito depende de una investigación rigurosa y una clara comprensión del valor relativo. Utilice esta guía para navegar el mercado, pero recuerde siempre realizar una diligencia debida exhaustiva antes de cualquier inversión.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const processLabel = (label, maxLength = 16) => {
+                if (label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                let currentLine = '';
+                const lines = [];
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = currentLine ? currentLine + ' ' + word : word;
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                }
+                return label;
+            };
+
+            const priceHierarchyData = [
+                { zone: 'Las Majadas - Las Molinetas', price: 980 },
+                { zone: 'Centro / Casco Antiguo', price: 1280 },
+                { zone: 'Calabardina - Cope', price: 1630 },
+                { zone: 'Los Collados - Los Geráneos', price: 1970 },
+                { zone: 'Las Lomas - Las Yucas', price: 2032 },
+                { zone: 'Las Delicias', price: 2302 },
+                { zone: 'El Hornillo', price: 2702 },
+                { zone: 'Isla del Fraile', price: 4136 }
+            ].sort((a, b) => a.price - b.price);
+
+            const ctxHierarchy = document.getElementById('priceHierarchyChart').getContext('2d');
+            new Chart(ctxHierarchy, {
+                type: 'bar',
+                data: {
+                    labels: priceHierarchyData.map(d => processLabel(d.zone)),
+                    datasets: [{
+                        label: 'Precio Medio (€/m²)',
+                        data: priceHierarchyData.map(d => d.price),
+                        backgroundColor: '#576CBC',
+                        borderColor: '#19376D',
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0B2447',
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            padding: 12,
+                            cornerRadius: 6,
+                            callbacks: {
+                                title: tooltipTitleCallback,
+                                label: (context) => ` ${context.raw.toLocaleString('es-ES')} €/m²`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#A5D7E8' },
+                            ticks: { font: { weight: 'bold' }, color: '#19376D', callback: value => `${value.toLocaleString('es-ES')} €` }
+                        },
+                        y: {
+                           grid: { display: false },
+                           ticks: { font: { weight: 'bold' }, color: '#19376D' }
+                        }
+                    }
+                }
+            });
+
+            // Gemini API Integration
+            const analyzeButton = document.getElementById('analyze-button');
+            const aiResultContainer = document.getElementById('ai-result');
+            const loader = document.getElementById('loader');
+            const recommendationText = document.getElementById('recommendation-text');
+            const budgetInput = document.getElementById('budget');
+            const riskSelect = document.getElementById('risk');
+            const experienceSelect = document.getElementById('experience');
+
+            analyzeButton.addEventListener('click', async () => {
+                const budget = budgetInput.value;
+                const risk = riskSelect.value;
+                const experience = experienceSelect.value;
+
+                if (!budget) {
+                    alert('Por favor, introduzca su presupuesto.');
+                    return;
+                }
+
+                aiResultContainer.classList.remove('hidden');
+                loader.classList.remove('hidden');
+                recommendationText.textContent = '';
+                
+                const prompt = `
+                    Eres un asesor experto en inversiones inmobiliarias en Águilas, Murcia, España. Un cliente te proporciona su perfil. Analízalo y recomiéndale una de dos estrategias de inversión de forma concisa y directa.
+
+                    Estrategia 1: 'Valor por Reforma'. Consiste en comprar un piso antiguo y espacioso en el centro para reformarlo íntegramente. Requiere más capital total (compra + reforma), tolerancia a los imprevistos de una obra y es ideal para quienes tienen experiencia en reformas. El potencial de plusvalía es mayor y la ubicación es premium.
+
+                    Estrategia 2: 'Valor por Precio Absoluto'. Consiste en comprar el piso con el precio de entrada más bajo posible, normalmente en zonas periféricas como Las Majadas. Requiere menor inversión inicial, tiene menor riesgo de obra y es ideal para quienes tienen poca experiencia en reformas. El potencial de revalorización es más moderado.
+
+                    Analiza el siguiente perfil de inversor:
+                    - Presupuesto Total: ${budget} euros
+                    - Tolerancia al Riesgo: ${risk}
+                    - Experiencia en Reformas: ${experience}
+
+                    Basado en este perfil, ¿qué estrategia le recomiendas y por qué? Tu respuesta debe ser clara, en español, concisa (máximo 3-4 frases), y dirigida directamente al inversor. No uses markdown. Empieza directamente con la recomendación.
+                `;
+
+                try {
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; 
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Error de la API: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+
+                    loader.classList.add('hidden');
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        recommendationText.textContent = text;
+                    } else {
+                        recommendationText.textContent = 'No se pudo obtener una recomendación. Por favor, inténtelo de nuevo.';
+                    }
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    loader.classList.add('hidden');
+                    recommendationText.textContent = 'Hubo un error al contactar al asesor de IA. Verifique su conexión o inténtelo más tarde.';
+                }
+            });
+            
+            // Table filter logic
+            const filterButtons = document.querySelectorAll('.table-filter-btn');
+            const tables = document.querySelectorAll('.listings-table');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tableIdToShow = `table-${button.dataset.table}`;
+
+                    // Hide all tables
+                    tables.forEach(table => {
+                        table.classList.add('hidden');
+                    });
+
+                    // Show the selected table
+                    document.getElementById(tableIdToShow).classList.remove('hidden');
+                    
+                    // Update button styles
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-secondary', 'text-white');
+                        btn.classList.add('bg-blue-100', 'text-secondary');
+                    });
+                    button.classList.add('bg-secondary', 'text-white');
+                    button.classList.remove('bg-blue-100', 'text-secondary');
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
