@@ -3,463 +3,605 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografía del Mercado Inmobiliario: Águilas (con IA)</title>
+    <title>Análisis de Inversión Inmobiliaria en Águilas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Brilliant Blues (#0B2447, #19376D, #576CBC, #A5D7E8) -->
-    <!-- Application Structure Plan: The infographic follows a narrative structure. 1) Hook: Key stats. 2) Market Context: Price hierarchy chart. 3) Core Insight: Investment strategies. 4) AI Advisor: Interactive recommendation. 5) Detailed Listings [NEW]: Interactive tables showing specific property opportunities by zone. 6) Deeper Analysis: Bank asset risks. 7) Conclusion: Takeaways. The new section adds a data-rich layer for users who want to drill down into specific listings. -->
-    <!-- Visualization & Content Choices: 1. Market Growth: Big Number (HTML). 2. Price Hierarchy: Bar Chart (Chart.js). 3. Strategies: HTML cards. 4. AI Advisor: HTML form + Gemini API. 5. Detailed Listings [NEW]: Data Point -> Specific property data tables from the report. Goal -> Organize/Inform. Viz -> Interactive HTML Tables with JS-powered tabs/filters. Justification -> Presents dense, tabular data in a structured, non-overwhelming way. 6. Bank Asset Risks: HTML Flow Diagram. -->
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard. It starts with high-level market metrics, then allows users to explore investment zones through interactive cards. The core of the app is a powerful, filterable "Investment Funnel" that displays properties as cards, moving away from a static table. Clicking a card reveals a detailed modal view. This is followed by visual data analysis with charts (profitability by zone, price vs. value). The structure concludes with strategic advice. This task-oriented flow (from broad market to specific property to strategy) is more intuitive and useful for an investor than a linear report, allowing them to actively find opportunities rather than passively read findings. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Market overview and zones (Sec 1). -> Goal: Inform & Contextualize. -> Viz/Method: Interactive HTML/CSS cards. -> Interaction: Click to expand/reveal info. -> Justification: More engaging than paragraphs of text. Library: Vanilla JS.
+        - Report Info: Top 20 properties table (Sec 4). -> Goal: Compare & Find. -> Viz/Method: Filterable list of property cards. -> Interaction: Apply filters (zone, extras), sort, click for detail modal. -> Justification: Empowers user to find properties matching specific criteria, far superior to a static table. The detail modal with a mini-chart focuses analysis. Library: Vanilla JS.
+        - Report Info: Price vs. Appraisal data. -> Goal: Analyze relationships. -> Viz/Method: Bar Chart (Avg. Profitability by Zone) & Scatter Plot (Price vs. Appraisal). -> Interaction: Tooltips on hover. -> Justification: These charts provide powerful visual summaries of the entire dataset, revealing trends (e.g., which zones are most undervalued) that are not obvious from a table alone. Library: Chart.js.
+        - Report Info: Risks and Strategy (Sec 5). -> Goal: Advise. -> Viz/Method: Collapsible accordion sections. -> Interaction: Click to expand. -> Justification: Keeps the UI clean and presents dense information in a digestible format. Library: Vanilla JS.
+    -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F0F8FF;
         }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 400px;
-            max-height: 500px;
+            height: 300px;
+            max-height: 400px;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 500px;
+                height: 350px;
             }
         }
-        .bg-primary { background-color: #0B2447; }
-        .text-primary { color: #0B2447; }
-        .bg-secondary { background-color: #19376D; }
-        .text-secondary { color: #19376D; }
-        .bg-accent { background-color: #576CBC; }
-        .text-accent { color: #576CBC; }
-        .bg-light { background-color: #A5D7E8; }
-        .text-light { color: #A5D7E8; }
-        
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #576CBC;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #475569;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 2.5rem auto;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+            color: #475569;
+        }
+        .nav-button:hover {
+            color: #0891b2;
+            transform: translateY(-2px);
+        }
+        .property-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
     </style>
 </head>
-<body class="bg-[#F0F8FF] text-primary">
+<body class="bg-slate-50 text-slate-800">
 
-    <div class="container mx-auto p-4 md:p-8">
-
-        <header class="text-center mb-12 md:mb-16">
-            <h1 class="text-4xl md:text-6xl font-black text-primary uppercase">Mercado Inmobiliario de Águilas</h1>
-            <p class="text-xl md:text-2xl text-accent font-semibold mt-2">Una Guía Visual para la Inversión Inteligente</p>
-        </header>
-
-        <section id="market-growth" class="mb-12 md:mb-20">
-            <div class="text-center bg-primary text-white p-8 md:p-12 rounded-2xl shadow-2xl max-w-5xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-bold text-light mb-4">Un Mercado en Plena Ebullición</h2>
-                <p class="text-lg text-slate-300 mb-6">El mercado de Águilas está experimentando una apreciación sin precedentes, haciendo que la búsqueda de "gangas" sea un desafío estratégico. La clave no es encontrar lo más barato, sino el mayor valor relativo.</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-secondary p-6 rounded-xl">
-                        <p class="text-5xl md:text-6xl font-black text-white">+26.2%</p>
-                        <p class="font-semibold text-light mt-2">Aumento de Precio Interanual</p>
-                    </div>
-                    <div class="bg-secondary p-6 rounded-xl">
-                        <p class="text-5xl md:text-6xl font-black text-white">1.400€</p>
-                        <p class="font-semibold text-light mt-2">Línea Base del m² Asequible</p>
-                    </div>
-                    <div class="bg-secondary p-6 rounded-xl">
-                        <p class="text-5xl md:text-6xl font-black text-white">2</p>
-                        <p class="font-semibold text-light mt-2">Estrategias Clave de Valor</p>
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-900">🏠 Inversión Águilas</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#mercado" class="nav-button px-3 py-2 rounded-md text-sm font-medium">Mercado</a>
+                        <a href="#oportunidades" class="nav-button px-3 py-2 rounded-md text-sm font-medium">Oportunidades</a>
+                        <a href="#analisis" class="nav-button px-3 py-2 rounded-md text-sm font-medium">Análisis Visual</a>
+                        <a href="#estrategia" class="nav-button px-3 py-2 rounded-md text-sm font-medium">Estrategia</a>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <section id="price-hierarchy" class="mb-12 md:mb-20">
-            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl">
-                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">La Jerarquía de Precios por Zona</h2>
-                <p class="text-center text-accent mb-8 max-w-3xl mx-auto">El valor de un inmueble en Águilas está directamente ligado a su ubicación. Este gráfico muestra la clara estratificación de precios por metro cuadrado, desde el lujo de Isla del Fraile hasta las oportunidades en Las Majadas.</p>
-                <div class="chart-container">
-                    <canvas id="priceHierarchyChart"></canvas>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- HERO SECTION -->
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">Descubra Oportunidades de Inversión Inmobiliaria en Águilas</h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600">Una herramienta interactiva para analizar, filtrar y identificar las propiedades más rentables para alquiler turístico en la Costa Cálida.</p>
+            <div class="mt-8 flex justify-center gap-4 flex-wrap">
+                <div class="bg-white p-4 rounded-lg shadow-md border border-slate-200">
+                    <p class="text-sm text-slate-500">Precio Máximo</p>
+                    <p class="text-xl font-bold text-cyan-600">150.000 €</p>
                 </div>
-            </div>
-        </section>
-        
-        <section id="investment-strategies" class="mb-12 md:mb-20">
-            <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-8">Dos Caminos Hacia el Valor</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-xl p-8 border-t-8 border-accent">
-                    <h3 class="text-2xl font-bold text-secondary mb-4">Estrategia 1: Valor por Reforma</h3>
-                    <p class="text-slate-600 mb-6">Esta estrategia se enfoca en adquirir propiedades antiguas pero espaciosas en ubicaciones céntricas a un bajo precio por metro cuadrado. La inversión se materializa al reformar el inmueble para crear una vivienda moderna en una zona premium, generando una alta plusvalía.</p>
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p><span class="font-bold text-secondary">Zona Objetivo:</span> Centro / Casco Antiguo</p>
-                        <p><span class="font-bold text-secondary">Clave:</span> Presupuesto para reforma integral</p>
-                        <p><span class="font-bold text-secondary">Resultado:</span> Alto potencial de revalorización</p>
-                    </div>
+                <div class="bg-white p-4 rounded-lg shadow-md border border-slate-200">
+                    <p class="text-sm text-slate-500">Crecimiento Anual Precio</p>
+                    <p class="text-xl font-bold text-green-600">+26.2%</p>
                 </div>
-                <div class="bg-white rounded-2xl shadow-xl p-8 border-t-8 border-light">
-                    <h3 class="text-2xl font-bold text-secondary mb-4">Estrategia 2: Valor por Precio Absoluto</h3>
-                    <p class="text-slate-600 mb-6">Consiste en buscar el precio de entrada más bajo posible, aceptando una ubicación menos céntrica pero funcional. Ideal para inversores con un presupuesto ajustado que quieren acceder a la propiedad con una inversión inicial mínima.</p>
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p><span class="font-bold text-secondary">Zona Objetivo:</span> Las Majadas / Las Molinetas</p>
-                        <p><span class="font-bold text-secondary">Clave:</span> Aceptar ubicación periférica</p>
-                        <p><span class="font-bold text-secondary">Resultado:</span> Mínimo desembolso inicial</p>
-                    </div>
+                <div class="bg-white p-4 rounded-lg shadow-md border border-slate-200">
+                    <p class="text-sm text-slate-500">Oportunidades Analizadas</p>
+                    <p class="text-xl font-bold text-cyan-600">20</p>
                 </div>
             </div>
         </section>
 
-        <section id="ai-advisor" class="mb-12 md:mb-20">
-             <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl max-w-4xl mx-auto">
-                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">Asesor de Estrategia con IA ✨</h2>
-                <p class="text-center text-accent mb-8 max-w-3xl mx-auto">¿No estás seguro de qué camino tomar? Introduce tus datos y deja que nuestra IA analice tu perfil para darte una recomendación personalizada.</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <!-- ZONAS DE INVERSION -->
+        <section id="mercado" class="mb-16 scroll-mt-20">
+            <h2 class="section-title">Geografía de la Oportunidad</h2>
+            <p class="section-subtitle">Águilas ofrece diversas zonas con perfiles de inversión distintos. Haga clic en cada una para entender su potencial, precios de referencia y atractivo para el alquiler turístico. Esta selección es clave para enfocar su búsqueda.</p>
+            <div id="zone-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+        </section>
+
+        <!-- OPORTUNIDADES -->
+        <section id="oportunidades" class="mb-16 scroll-mt-20">
+            <h2 class="section-title">Catálogo Interactivo de Oportunidades</h2>
+            <p class="section-subtitle">Aquí se encuentran las 20 propiedades con mayor potencial de rentabilidad. Use los filtros para acotar la búsqueda según sus preferencias y haga clic en "Ver Detalles" para un análisis completo de cada activo.</p>
+
+            <!-- FILTROS -->
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-slate-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <div class="md:col-span-3 lg:col-span-2">
+                        <h4 class="font-semibold mb-2 text-slate-700">Filtrar por Zona</h4>
+                        <div id="zone-filters" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                    </div>
                     <div>
-                        <label for="budget" class="block text-sm font-medium text-secondary">Presupuesto Total (€)</label>
-                        <input type="number" id="budget" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm" placeholder="Ej: 80000">
+                        <h4 class="font-semibold mb-2 text-slate-700">Extras Clave</h4>
+                        <div id="extras-filters" class="space-y-2"></div>
                     </div>
-                     <div>
-                        <label for="risk" class="block text-sm font-medium text-secondary">Tolerancia al Riesgo</label>
-                        <select id="risk" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm">
-                            <option>Baja</option>
-                            <option selected>Media</option>
-                            <option>Alta</option>
-                        </select>
+                    <div>
+                        <h4 class="font-semibold mb-2 text-slate-700">Habitaciones</h4>
+                        <div id="rooms-filters" class="space-y-2"></div>
                     </div>
-                     <div>
-                        <label for="experience" class="block text-sm font-medium text-secondary">Experiencia en Reformas</label>
-                        <select id="experience" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-accent focus:ring-accent sm:text-sm">
-                            <option>Ninguna</option>
-                            <option selected>Poca</option>
-                            <option>Bastante</option>
+                    <div>
+                        <h4 class="font-semibold mb-2 text-slate-700">Ordenar por</h4>
+                        <select id="sort-by" class="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500">
+                            <option value="diff_perc_desc">Mayor Rentabilidad</option>
+                            <option value="price_asc">Precio (Menor a Mayor)</option>
+                            <option value="price_desc">Precio (Mayor a Menor)</option>
+                            <option value="appraisal_desc">Peritaje (Mayor a Menor)</option>
                         </select>
                     </div>
                 </div>
-
-                <div class="text-center">
-                    <button id="analyze-button" class="bg-secondary hover:bg-primary text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                        Analizar mi Perfil
-                    </button>
-                </div>
-
-                <div id="ai-result" class="mt-8 p-6 bg-blue-50 rounded-lg border-l-4 border-accent hidden">
-                    <h4 class="text-lg font-bold text-secondary mb-2">Recomendación de la IA:</h4>
-                    <div id="loader" class="loader hidden"></div>
-                    <p id="recommendation-text" class="text-slate-700"></p>
-                </div>
-             </div>
-        </section>
-
-        <section id="detailed-listings" class="mb-12 md:mb-20">
-            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl">
-                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">Catálogo de Oportunidades Detallado</h2>
-                <p class="text-center text-accent mb-8 max-w-3xl mx-auto">Explore los listados específicos de inmuebles asequibles identificados en las zonas de oportunidad clave. Utilice los botones para cambiar entre zonas.</p>
-                
-                <div class="flex flex-wrap justify-center gap-2 mb-8">
-                    <button class="table-filter-btn bg-secondary text-white px-4 py-2 rounded-full font-medium" data-table="majadas">Las Majadas</button>
-                    <button class="table-filter-btn bg-blue-100 text-secondary px-4 py-2 rounded-full font-medium" data-table="centro">Centro / Casco Antiguo</button>
-                    <button class="table-filter-btn bg-blue-100 text-secondary px-4 py-2 rounded-full font-medium" data-table="collados">Los Collados / Calabardina</button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table id="table-majadas" class="w-full text-sm text-left text-gray-500 listings-table">
-                        <thead class="text-xs text-secondary uppercase bg-blue-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Dirección</th>
-                                <th scope="col" class="px-6 py-3">Precio (€)</th>
-                                <th scope="col" class="px-6 py-3">Superficie (m²)</th>
-                                <th scope="col" class="px-6 py-3">Precio/m² (€)</th>
-                                <th scope="col" class="px-6 py-3">Observaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Maestro Gines Ortiz Ramirez</td><td class="px-6 py-4">26,700</td><td class="px-6 py-4">69</td><td class="px-6 py-4 font-bold">387</td><td class="px-6 py-4">2 hab, 2 baños, parking. Precio muy bajo.</td></tr>
-                            <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Ctra Prolongación Virgen de Lourdes</td><td class="px-6 py-4">29,000</td><td class="px-6 py-4">64</td><td class="px-6 py-4 font-bold">453</td><td class="px-6 py-4">2 hab, 1 baño, parking.</td></tr>
-                            <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Quico y Maldonado</td><td class="px-6 py-4">37,500</td><td class="px-6 py-4">106</td><td class="px-6 py-4 font-bold">354</td><td class="px-6 py-4">4 hab, 2 baños. Excelente ratio tamaño/precio.</td></tr>
-                            <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Pianista Adolfo Olivares Soto</td><td class="px-6 py-4">41,500</td><td class="px-6 py-4">71</td><td class="px-6 py-4 font-bold">585</td><td class="px-6 py-4">3 hab, 2 baños.</td></tr>
-                             <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Piso en Las Majadas (Idealista)</td><td class="px-6 py-4">41,500</td><td class="px-6 py-4">96</td><td class="px-6 py-4 font-bold">432</td><td class="px-6 py-4">3 hab, 2 aseos. Perfecto para familias.</td></tr>
-                        </tbody>
-                    </table>
-                     <table id="table-centro" class="w-full text-sm text-left text-gray-500 listings-table hidden">
-                        <thead class="text-xs text-secondary uppercase bg-blue-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Dirección</th>
-                                <th scope="col" class="px-6 py-3">Precio (€)</th>
-                                <th scope="col" class="px-6 py-3">Superficie (m²)</th>
-                                <th scope="col" class="px-6 py-3">Precio/m² (€)</th>
-                                <th scope="col" class="px-6 py-3">Observaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Manzanera</td><td class="px-6 py-4">35,000</td><td class="px-6 py-4">55</td><td class="px-6 py-4 font-bold">636</td><td class="px-6 py-4">1 hab, a reformar. Ideal para inversor individual.</td></tr>
-                           <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">C/ Escaleras</td><td class="px-6 py-4">39,700</td><td class="px-6 py-4">72</td><td class="px-6 py-4 font-bold">551</td><td class="px-6 py-4">3 hab, a reformar. Oportunidad en casa unifamiliar.</td></tr>
-                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Calle Floridablanca</td><td class="px-6 py-4">73,000</td><td class="px-6 py-4">79</td><td class="px-6 py-4 font-bold">924</td><td class="px-6 py-4">Bajos, 2 hab, 1 baño. Precio competitivo.</td></tr>
-                           <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Casa en Casco Antiguo (Fotocasa)</td><td class="px-6 py-4">95,000</td><td class="px-6 py-4">140</td><td class="px-6 py-4 font-bold">679</td><td class="px-6 py-4">4 hab, 2 baños. Necesita reforma, gran superficie.</td></tr>
-                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Calle Doctor Luis Prieto</td><td class="px-6 py-4">110,000</td><td class="px-6 py-4">110</td><td class="px-6 py-4 font-bold">1,000</td><td class="px-6 py-4">4 hab, 4ª planta con ascensor. Gran oportunidad.</td></tr>
-                        </tbody>
-                    </table>
-                    <table id="table-collados" class="w-full text-sm text-left text-gray-500 listings-table hidden">
-                        <thead class="text-xs text-secondary uppercase bg-blue-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Dirección</th>
-                                <th scope="col" class="px-6 py-3">Precio (€)</th>
-                                <th scope="col" class="px-6 py-3">Superficie (m²)</th>
-                                <th scope="col" class="px-6 py-3">Precio/m² (€)</th>
-                                <th scope="col" class="px-6 py-3">Observaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Apartamento Los Collados</td><td class="px-6 py-4">95,000</td><td class="px-6 py-4">65</td><td class="px-6 py-4 font-bold">1,462</td><td class="px-6 py-4">Garaje incluido. Rebajado un 21%.</td></tr>
-                           <tr class="bg-blue-50 border-b"><td class="px-6 py-4 font-medium text-gray-900">Apartamento en Calabardina</td><td class="px-6 py-4">98,000</td><td class="px-6 py-4">80</td><td class="px-6 py-4 font-bold">1,225</td><td class="px-6 py-4">2ª planta con ascensor, aire acondicionado.</td></tr>
-                           <tr class="bg-white border-b"><td class="px-6 py-4 font-medium text-gray-900">Apartamento Los Collados</td><td class="px-6 py-4">100,000</td><td class="px-6 py-4">58</td><td class="px-6 py-4 font-bold">1,724</td><td class="px-6 py-4">Rebajado 20.000€.</td></tr>
-                        </tbody>
-                    </table>
+                 <div class="mt-4 text-center">
+                    <button id="reset-filters" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-md hover:bg-slate-300 transition">Limpiar Filtros</button>
                 </div>
             </div>
+
+            <!-- LISTA DE PROPIEDADES -->
+            <div id="properties-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+            <p id="no-results" class="hidden text-center text-slate-500 text-lg py-8">No se encontraron propiedades con los filtros seleccionados.</p>
         </section>
 
-
-        <section id="bank-assets-flow" class="mb-12 md:mb-20">
-            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl">
-                <h2 class="text-3xl md:text-4xl font-bold text-primary text-center mb-2">El Laberinto de los Activos Bancarios</h2>
-                <p class="text-center text-accent mb-10 max-w-3xl mx-auto">Una parte importante de las ofertas económicas proviene de bancos, pero no todas son iguales. Comprender su tipología es crucial para evitar riesgos inesperados. Este diagrama simplifica el proceso de decisión.</p>
-                <div class="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-0">
-                    <div class="p-4 bg-secondary text-white rounded-lg shadow-md text-center font-bold">Punto de Partida:<br>Activo Bancario</div>
-                    <div class="h-8 md:h-auto w-1 md:w-16 bg-accent"></div>
-                    <div class="flex flex-col gap-4 w-full md:w-auto">
-                        <div class="flex items-center gap-4">
-                            <div class="w-8 h-1 bg-accent"></div>
-                            <div class="flex-1 border-2 border-emerald-500 bg-emerald-50 p-4 rounded-lg shadow-md">
-                                <h4 class="font-bold text-emerald-800">✅ Venta Directa</h4>
-                                <p class="text-sm text-slate-600">El banco es propietario. Se puede visitar y financiar. <br><span class="font-bold">Riesgo: Bajo</span></p>
-                            </div>
-                        </div>
-                         <div class="flex items-center gap-4">
-                            <div class="w-8 h-1 bg-accent"></div>
-                            <div class="flex-1 border-2 border-rose-500 bg-rose-50 p-4 rounded-lg shadow-md">
-                                <h4 class="font-bold text-rose-800">⚠️ Inmueble Ocupado</h4>
-                                <p class="text-sm text-slate-600">Vendido con ocupantes ilegales. No se visita, no se financia. El comprador asume el desahucio. <br><span class="font-bold">Riesgo: Muy Alto</span></p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-8 h-1 bg-accent"></div>
-                            <div class="flex-1 border-2 border-amber-500 bg-amber-50 p-4 rounded-lg shadow-md">
-                                <h4 class="font-bold text-amber-800">⚖️ Cesión de Remate / Sin Posesión</h4>
-                                <p class="text-sm text-slate-600">Operaciones complejas para expertos. Se compra un derecho o un inmueble de estado desconocido. <br><span class="font-bold">Riesgo: Alto</span></p>
-                            </div>
-                        </div>
+        <!-- ANALISIS VISUAL -->
+        <section id="analisis" class="mb-16 scroll-mt-20">
+             <h2 class="section-title">Análisis Visual del Mercado</h2>
+             <p class="section-subtitle">Estos gráficos resumen la información clave del mercado. El primero muestra la rentabilidad media por zona para identificar las áreas más interesantes, mientras que el segundo compara el precio de venta con el valor de peritaje para visualizar el panorama completo de oportunidades.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="font-bold text-lg text-center mb-4 text-slate-800">Rentabilidad Media por Zona (%)</h3>
+                    <div class="chart-container">
+                        <canvas id="profitabilityByZoneChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="font-bold text-lg text-center mb-4 text-slate-800">Precio de Venta vs. Valor de Peritaje</h3>
+                     <div class="chart-container">
+                        <canvas id="priceVsAppraisalChart"></canvas>
                     </div>
                 </div>
             </div>
         </section>
+        
+        <!-- ESTRATEGIA Y RIESGOS -->
+        <section id="estrategia" class="scroll-mt-20">
+            <h2 class="section-title">Estrategia de Adquisición y Riesgos Clave</h2>
+            <p class="section-subtitle">Una inversión informada requiere conocer tanto las oportunidades como los riesgos. Explore estas recomendaciones estratégicas y puntos de atención para tomar la mejor decisión de compra.</p>
+            <div id="strategy-container" class="max-w-4xl mx-auto space-y-4">
+            </div>
+        </section>
 
-        <footer class="text-center mt-12 md:mt-20 pt-8 border-t border-accent">
-            <h3 class="text-2xl font-bold text-primary">Conclusión para el Inversor</h3>
-            <p class="text-slate-600 max-w-4xl mx-auto mt-4">En el dinámico mercado de Águilas, la oportunidad no reside en el precio más bajo, sino en la estrategia correcta. Ya sea revitalizando el corazón histórico de la ciudad o asegurando una entrada asequible en sus barrios residenciales, el éxito depende de una investigación rigurosa y una clara comprensión del valor relativo. Utilice esta guía para navegar el mercado, pero recuerde siempre realizar una diligencia debida exhaustiva antes de cualquier inversión.</p>
-        </footer>
-
+    </main>
+    
+    <!-- MODAL -->
+    <div id="property-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50">
+        <div id="modal-content" class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto transform transition-all scale-95 opacity-0">
+        </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const processLabel = (label, maxLength = 16) => {
-                if (label.length <= maxLength) {
-                    return label;
-                }
-                const words = label.split(' ');
-                let currentLine = '';
-                const lines = [];
-                for (const word of words) {
-                    if ((currentLine + ' ' + word).length > maxLength && currentLine.length > 0) {
-                        lines.push(currentLine);
-                        currentLine = word;
-                    } else {
-                        currentLine = currentLine ? currentLine + ' ' + word : word;
-                    }
-                }
-                lines.push(currentLine);
-                return lines;
-            };
 
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
-                }
-                return label;
-            };
+<script>
+const zonesData = [
+    { 
+        name: "Los Collados / Los Geraneos",
+        id: "los-collados",
+        description: "Zona de expansión con urbanizaciones recientes que suelen incluir piscina y garaje. Representa el mejor compromiso entre precio, calidades modernas y potencial de alquiler, aunque requiere coche.",
+        price: "1.865 - 1.987 €/m²"
+    },
+    { 
+        name: "Casco Antiguo / Centro",
+        id: "casco-antiguo",
+        description: "Ofrece el encanto local y una ubicación estratégica cerca de playas y servicios. El parque inmobiliario es más antiguo, permitiendo encontrar oportunidades, a menudo sin ascensor.",
+        price: "1.182 - 1.403 €/m²"
+    },
+    { 
+        name: "Las Lomas / Las Yucas",
+        id: "las-lomas",
+        description: "Área residencial tranquila y consolidada, muy demandada por su proximidad a la playa de Poniente y servicios. Los precios son competitivos pero en el rango alto del presupuesto.",
+        price: "1.896 - 2.144 €/m²"
+    },
+    { 
+        name: "Calarreona",
+        id: "calarreona",
+        description: "Muy popular para el turismo familiar por sus excelentes playas. Estructurada en urbanizaciones con buenas calidades y precios que se alinean bien con los objetivos de inversión.",
+        price: "1.552 €/m² (aprox.)"
+    },
+    { 
+        name: "Calabardina",
+        id: "calabardina",
+        description: "Pedanía con carácter de pueblo pesquero a 8 km de Águilas. Ofrece un ambiente más relajado y precios más bajos, ideal para un perfil de turista que busca desconexión.",
+        price: "1.528 - 1.645 €/m²"
+    }
+];
 
-            const priceHierarchyData = [
-                { zone: 'Las Majadas - Las Molinetas', price: 980 },
-                { zone: 'Centro / Casco Antiguo', price: 1280 },
-                { zone: 'Calabardina - Cope', price: 1630 },
-                { zone: 'Los Collados - Los Geráneos', price: 1970 },
-                { zone: 'Las Lomas - Las Yucas', price: 2032 },
-                { zone: 'Las Delicias', price: 2302 },
-                { zone: 'El Hornillo', price: 2702 },
-                { zone: 'Isla del Fraile', price: 4136 }
-            ].sort((a, b) => a.price - b.price);
+const propertiesData = [
+    { id: "LC-01", location: "Los Collados - Los Geraneos", zone: "Los Collados / Los Geraneos", features: "Apartamento 2 hab, 1 baño", sqm: 65, extras: ["Terraza", "Garaje", "Piscina"], price: 95000, appraisal: 134463, diff_eur: 39463, diff_perc: 41.5, alert: "[15, 30] Precio muy competitivo con rebaja significativa. Incluye todos los extras más demandados. Urge verificar estado y gastos de comunidad.", rooms: 2 },
+    { id: "LC-02", location: "Los Collados - Los Geraneos", zone: "Los Collados / Los Geraneos", features: "Apartamento 2 hab, 2 baños", sqm: 60, extras: ["Terraza", "Garaje", "Piscina"], price: 98000, appraisal: 136250, diff_eur: 38250, diff_perc: 39.0, alert: "[15] Gran terraza (35m²) que añade mucho valor. Ubicado en residencial tranquilo. Imprescindible coche para los inquilinos.", rooms: 2 },
+    { id: "CA-01", location: "Casco Antiguo, Calle Isidoro Cierva", zone: "Casco Antiguo / Centro", features: "Piso 3 hab, 2 baños", sqm: 92, extras: ["Ascensor"], price: 46500, appraisal: 63245, diff_eur: 16745, diff_perc: 36.0, alert: "[16] Precio extremadamente bajo. Procede de activo bancario, posible necesidad de reforma integral no visible en fotos. Oportunidad de alto riesgo/alta recompensa.", rooms: 3 },
+    { id: "LM-01", location: "Las Lomas - Las Yucas, C/ Juan Ramon Jimenez", zone: "Las Lomas / Las Yucas", features: "Piso 2 hab, 1 baño", sqm: 70, extras: ["Terraza", "Ascensor", "Vistas mar"], price: 129000, appraisal: 165715, diff_eur: 36715, diff_perc: 28.5, alert: "[26] Excelente ubicación a 200m de Playa Poniente. Vistas al mar añaden valor. Ideal para segunda residencia o inversión.", rooms: 2 },
+    { id: "LC-03", location: "Los Collados - Los Geraneos", zone: "Los Collados / Los Geraneos", features: "Apartamento 2 hab, 2 baños", sqm: 68, extras: ["Garaje", "Piscina"], price: 110000, appraisal: 139400, diff_eur: 29400, diff_perc: 26.7, alert: "[31] Planta baja con acceso directo a zonas comunes. Cocina americana. Propiedad en buen estado aparente, lista para alquilar.", rooms: 2 },
+    { id: "CA-02", location: "Casco Antiguo, Calle Martí", zone: "Casco Antiguo / Centro", features: "Piso 3 hab, 1 baño", sqm: 92, extras: ["Ascensor", "Balcón"], price: 114000, appraisal: 138460, diff_eur: 24460, diff_perc: 21.5, alert: "[31, 32] Ubicación céntrica excelente. Luminoso. Anuncio destaca la idoneidad para inversión. Sin garaje, un punto débil en el centro.", rooms: 3 },
+    { id: "CA-03", location: "Casco Antiguo", zone: "Casco Antiguo / Centro", features: "Ático 3 hab, 2 baños", sqm: 98, extras: ["Terraza", "Garaje", "Ascensor"], price: 115000, appraisal: 138950, diff_eur: 23950, diff_perc: 20.8, alert: "[27] Un ático con garaje en el centro es un activo muy raro y valioso. El precio parece muy ajustado para estas características.", rooms: 3 },
+    { id: "CR-01", location: "Calarreona, Urb. Calarreona", zone: "Calarreona", features: "Piso 2 hab, 1 baño", sqm: 78, extras: ["Terraza", "Garaje", "Ascensor", "Vistas mar"], price: 135000, appraisal: 162240, diff_eur: 27240, diff_perc: 20.2, alert: "[26] A 500m de la playa de Calarreona. Zona muy demandada en verano. La orientación Este y vistas al mar son un plus.", rooms: 2 },
+    { id: "CA-04", location: "Casco Antiguo", zone: "Casco Antiguo / Centro", features: "Piso 3 hab, 1 baño", sqm: 109, extras: ["Terraza"], price: 95000, appraisal: 113825, diff_eur: 18825, diff_perc: 19.8, alert: "[27] A menos de 200m de la playa de Levante. Sin ascensor, lo que justifica el precio. La terraza es un gran punto a favor.", rooms: 3 },
+    { id: "LC-04", location: "Los Collados - Los Geraneos", zone: "Los Collados / Los Geraneos", features: "Apartamento 2 hab, 2 baños", sqm: 75, extras: ["Terraza", "Piscina"], price: 130000, appraisal: 154375, diff_eur: 24375, diff_perc: 18.8, alert: "[30] Planta baja con acceso directo a la piscina. Ideal para familias con niños. Buen estado de conservación aparente.", rooms: 2 },
+    { id: "LM-02", location: "Las Lomas - Las Yucas", zone: "Las Lomas / Las Yucas", features: "Piso 3 hab, 1 baño", sqm: 84, extras: ["Sin ascensor"], price: 80000, appraisal: 94080, diff_eur: 14080, diff_perc: 17.6, alert: "[26] Precio de entrada muy bajo para la zona. La falta de ascensor y la necesidad de posible actualización justifican el precio. Buena distribución.", rooms: 3 },
+    { id: "CA-05", location: "Casco Antiguo, C/ Ramón y Cajal", zone: "Casco Antiguo / Centro", features: "Piso 3 hab, 2 baños", sqm: 110, extras: ["Sin ascensor"], price: 135000, appraisal: 156750, diff_eur: 21750, diff_perc: 16.1, alert: "[27] Piso amplio en el centro. La ausencia de ascensor es el principal punto negativo a considerar para el perfil del inquilino.", rooms: 3 },
+    { id: "CB-01", location: "Calabardina", zone: "Calabardina", features: "Planta baja 3 hab, 1 baño", sqm: 83, extras: ["Terraza", "Garaje"], price: 140000, appraisal: 161895, diff_eur: 21895, diff_perc: 15.6, alert: "[27] Ubicación en Calabardina, ideal para turismo tranquilo. Incluye garaje, muy necesario en la zona. Buen potencial de alquiler estival.", rooms: 3 },
+    { id: "CR-02", location: "Calarreona", zone: "Calarreona", features: "Dúplex 3 hab, 2 baños", sqm: 153, extras: ["Terraza", "Garaje"], price: 165000, appraisal: 189525, diff_eur: 24525, diff_perc: 14.9, alert: "[27] *Supera presupuesto*. Se incluye por su excelente diferencial. Amplio dúplex ideal para familias grandes. Requiere verificar si el precio es negociable a 150.000€.", rooms: 3 },
+    { id: "CA-06", location: "Casco Antiguo", zone: "Casco Antiguo / Centro", features: "Piso 3 hab, 2 baños", sqm: 123, extras: ["Balcón", "Reformado"], price: 150000, appraisal: 170985, diff_eur: 20985, diff_perc: 14.0, alert: "[27, 33] Totalmente reformado, lo que elimina la necesidad de inversión inicial. Amplio y bien ubicado. Sin ascensor ni garaje.", rooms: 3 },
+    { id: "LC-05", location: "Los Collados - Los Geraneos", zone: "Los Collados / Los Geraneos", features: "Ático 2 hab, 1 baño", sqm: 61, extras: ["Terraza", "Garaje", "Piscina"], price: 141500, appraisal: 160918, diff_eur: 19418, diff_perc: 13.7, alert: "[30] Ático con solárium privado, un extra muy cotizado. Complejo con todos los servicios. Precio en el límite alto para su tamaño.", rooms: 2 },
+    { id: "CA-07", location: "Casco Antiguo", zone: "Casco Antiguo / Centro", features: "Planta baja 3 hab, 2 baños", sqm: 80, extras: ["Ascensor"], price: 150000, appraisal: 168000, diff_eur: 18000, diff_perc: 12.0, alert: "[27] Precio rebajado. Planta baja en edificio con ascensor, buena accesibilidad. El estado parece bueno, a verificar.", rooms: 3 },
+    { id: "LM-03", location: "Las Lomas - Las Yucas, Pza. Gutiérrez Mellado", zone: "Las Lomas / Las Yucas", features: "Piso 3 hab, 1 baño", sqm: 120, extras: ["Sin ascensor"], price: 144000, appraisal: 160128, diff_eur: 16128, diff_perc: 11.2, alert: "[26] Muy espacioso (120 m²). La falta de ascensor en una planta alta puede ser un inconveniente importante para el alquiler.", rooms: 3 },
+    { id: "LC-06", location: "Los Collados - Los Geraneos", zone: "Los Collados / Los Geraneos", features: "Apartamento 2 hab, 2 baños", sqm: 60, extras: ["Terraza", "Garaje", "Piscina"], price: 143000, appraisal: 158825, diff_eur: 15825, diff_perc: 11.1, alert: "[30] Anuncio con descripción detallada. Complejo moderno con buenas calidades. Precio algo elevado para 60m², pero justificado por los extras.", rooms: 2 },
+    { id: "CA-08", location: "Casco Antiguo, C/ Francisco Díaz Romero", zone: "Casco Antiguo / Centro", features: "Piso 3 hab, 2 baños", sqm: 130, extras: ["Sin ascensor"], price: 140000, appraisal: 154700, diff_eur: 14700, diff_perc: 10.5, alert: "[27] Anuncio con mucha antigüedad (+250 días), lo que sugiere que el precio de venta podría ser altamente negociable. Muy espacioso.", rooms: 3 },
+];
 
-            const ctxHierarchy = document.getElementById('priceHierarchyChart').getContext('2d');
-            new Chart(ctxHierarchy, {
-                type: 'bar',
-                data: {
-                    labels: priceHierarchyData.map(d => processLabel(d.zone)),
-                    datasets: [{
-                        label: 'Precio Medio (€/m²)',
-                        data: priceHierarchyData.map(d => d.price),
-                        backgroundColor: '#576CBC',
-                        borderColor: '#19376D',
-                        borderWidth: 2,
-                        borderRadius: 5,
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0B2447',
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 12 },
-                            padding: 12,
-                            cornerRadius: 6,
-                            callbacks: {
-                                title: tooltipTitleCallback,
-                                label: (context) => ` ${context.raw.toLocaleString('es-ES')} €/m²`
+const strategyData = [
+    {
+        title: "Perfiles Detallados de las 5 Inversiones Principales",
+        content: `
+            <ul class="list-disc list-inside space-y-2 text-slate-600">
+                <li><b>LC-01 (Los Collados):</b> Con un diferencial del 41.5%, es la oportunidad cuantitativa más clara. Su bajo precio para una vivienda con todos los extras es excepcional. Riesgo principal: dependencia del coche. Acción clave: verificar estado y gastos de comunidad.</li>
+                <li><b>LC-02 (Los Collados):</b> Similar al anterior, pero su gran terraza de 35m² es un activo inmenso para el alquiler turístico, justificando su alto diferencial del 39%.</li>
+                <li><b>CA-01 (Casco Antiguo):</b> Caso de alto riesgo/alta recompensa. Un precio de 46.500 € es anómalo y, al ser activo bancario, probablemente requiere una reforma integral (estimada 30k-40k€). El diferencial del 36% solo se materializa si la reforma se controla.</li>
+                <li><b>LM-01 (Las Lomas):</b> La inversión más segura y equilibrada. Su diferencial del 28.5% es sólido, y su ubicación a 200m de la Playa de Poniente con vistas al mar garantiza una alta demanda y una tarifa superior.</li>
+                <li><b>LC-03 (Los Collados):</b> Atractivo por su practicidad. Una planta baja con acceso directo a la piscina es un gran reclamo para familias, y al estar en buen estado, permite una puesta en alquiler inmediata.</li>
+            </ul>
+        `
+    },
+    {
+        title: "Identificación de Riesgos y Due Diligence",
+        content: `
+            <ul class="list-disc list-inside space-y-2 text-slate-600">
+                <li><b>El Dilema de Los Collados:</b> Ofrece la mejor relación precio/calidad, pero su dependencia del coche es un factor a destacar claramente en la comercialización del alquiler.</li>
+                <li><b>El Riesgo del Casco Antiguo:</b> Su encanto y ubicación son sus fortalezas, pero el riesgo reside en la antigüedad (posibles derramas) y, sobre todo, la frecuente ausencia de ascensor, que limita el perfil del inquilino.</li>
+                <li><b>La Trampa del "Precio de Derribo":</b> Activos bancarios muy baratos como el CA-01 pueden ocultar costes de reforma que erosionen el margen de beneficio. Una inspección técnica es imperativa.</li>
+                <li><b>La Estacionalidad:</b> Aunque el Carnaval ayuda, la demanda sigue muy concentrada en verano y Semana Santa. El plan de negocio debe contemplar periodos de vacancia.</li>
+            </ul>
+        `
+    },
+    {
+        title: "Conclusión y Recomendaciones Finales",
+        content: `
+            <ol class="list-decimal list-inside space-y-2 text-slate-600">
+                <li><b>Priorizar Visitas:</b> Contactar de inmediato a las agencias del "Top 10", con foco en LC-01, LM-01 y LC-02. La velocidad es clave en un mercado en alza.</li>
+                <li><b>Negociación Basada en Datos:</b> Utilizar el Valor de Peritaje de este análisis como herramienta objetiva para negociar, especialmente en anuncios con larga permanencia (ej. CA-08).</li>
+                <li><b>Foco Geográfico:</b> Centrar la búsqueda en Los Collados (comodidades), Calarreona (turismo familiar) y Casco Antiguo (ubicación, aceptando compromisos).</li>
+            </ol>
+            <p class="mt-4 text-slate-600">Con una estrategia disciplinada, es factible adquirir un activo en Águilas con un valor de mercado intrínseco superior a su coste, sentando las bases para una inversión rentable y con potencial de revalorización.</p>
+        `
+    }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const zoneContainer = document.getElementById('zone-container');
+    const propertiesContainer = document.getElementById('properties-container');
+    const zoneFiltersContainer = document.getElementById('zone-filters');
+    const extrasFiltersContainer = document.getElementById('extras-filters');
+    const roomsFiltersContainer = document.getElementById('rooms-filters');
+    const sortBySelect = document.getElementById('sort-by');
+    const noResults = document.getElementById('no-results');
+    const resetFiltersBtn = document.getElementById('reset-filters');
+
+    const modal = document.getElementById('property-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    const strategyContainer = document.getElementById('strategy-container');
+
+    let filters = {
+        zones: [],
+        extras: [],
+        rooms: []
+    };
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
+    }
+
+    function getIconForExtra(extra) {
+        switch(extra.toLowerCase()) {
+            case 'terraza': return '☀️';
+            case 'garaje': return '🚗';
+            case 'piscina': return '🏊';
+            case 'ascensor': return 'elevator'; // Special case
+            case 'vistas mar': return '🌊';
+            case 'balcón': return '🏞️';
+            default: return '✅';
+        }
+    }
+
+    function renderZones() {
+        zoneContainer.innerHTML = zonesData.map(zone => `
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 cursor-pointer transition-all duration-300 hover:shadow-cyan-100 hover:border-cyan-300" onclick="this.querySelector('p').classList.toggle('hidden')">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">${zone.name}</h3>
+                    <span class="text-cyan-600 font-semibold">${zone.price}</span>
+                </div>
+                <p class="text-slate-600 text-sm hidden">${zone.description}</p>
+                 <span class="text-xs text-cyan-700 font-semibold mt-2 inline-block">Pulsar para ver descripción</span>
+            </div>
+        `).join('');
+    }
+    
+    function renderStrategy() {
+        strategyContainer.innerHTML = strategyData.map((item, index) => `
+            <div class="bg-white rounded-lg shadow-md border border-slate-200 overflow-hidden">
+                <button class="w-full text-left p-4 flex justify-between items-center font-semibold text-slate-800 hover:bg-slate-100" onclick="document.getElementById('strategy-content-${index}').classList.toggle('hidden'); this.querySelector('span').classList.toggle('rotate-180')">
+                    ${item.title}
+                    <span class="transform transition-transform duration-300">&#9660;</span>
+                </button>
+                <div id="strategy-content-${index}" class="p-4 border-t border-slate-200 hidden">
+                    ${item.content}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderProperties(properties) {
+        if (properties.length === 0) {
+            noResults.classList.remove('hidden');
+            propertiesContainer.classList.add('hidden');
+        } else {
+            noResults.classList.add('hidden');
+            propertiesContainer.classList.remove('hidden');
+        }
+        
+        propertiesContainer.innerHTML = properties.map(p => `
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col property-card" data-id="${p.id}">
+                <div class="p-6 flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-cyan-600 bg-cyan-50 px-2 py-1 rounded-full">${p.zone}</span>
+                        <div class="text-right">
+                             <span class="text-xl font-bold text-green-600">+${p.diff_perc.toFixed(1)}%</span>
+                             <p class="text-xs text-slate-500">Rentabilidad</p>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-1">${p.features}</h3>
+                    <p class="text-sm text-slate-500 mb-4">${p.location}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                        <div>
+                            <p class="text-slate-500">Precio Venta</p>
+                            <p class="font-semibold text-slate-800">${formatCurrency(p.price)}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500">Valor Peritaje</p>
+                            <p class="font-semibold text-slate-800">${formatCurrency(p.appraisal)}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${p.extras.map(extra => {
+                            if (extra === 'Ascensor') {
+                                return `<div class="text-xs flex items-center bg-slate-100 text-slate-600 px-2 py-1 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg> Ascensor</div>`;
+                            }
+                            return `<span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">${getIconForExtra(extra)} ${extra}</span>`;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-4 border-t border-slate-200">
+                    <button class="w-full bg-cyan-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors" onclick="openModal('${p.id}')">Ver Detalles</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderFilters() {
+        const uniqueZones = [...new Set(propertiesData.map(p => p.zone))];
+        zoneFiltersContainer.innerHTML = uniqueZones.map(zone => `
+            <label class="flex items-center space-x-2 text-sm text-slate-600 cursor-pointer">
+                <input type="checkbox" class="form-checkbox h-4 w-4 rounded text-cyan-600 focus:ring-cyan-500" value="${zone}">
+                <span>${zone}</span>
+            </label>
+        `).join('');
+
+        const uniqueExtras = ['Garaje', 'Piscina', 'Terraza'];
+        extrasFiltersContainer.innerHTML = uniqueExtras.map(extra => `
+            <label class="flex items-center space-x-2 text-sm text-slate-600 cursor-pointer">
+                <input type="checkbox" class="form-checkbox h-4 w-4 rounded text-cyan-600 focus:ring-cyan-500" value="${extra}">
+                <span>${extra}</span>
+            </label>
+        `).join('');
+
+        const uniqueRooms = [...new Set(propertiesData.map(p => p.rooms))].sort();
+        roomsFiltersContainer.innerHTML = uniqueRooms.map(room => `
+            <label class="flex items-center space-x-2 text-sm text-slate-600 cursor-pointer">
+                <input type="checkbox" class="form-checkbox h-4 w-4 rounded text-cyan-600 focus:ring-cyan-500" value="${room}">
+                <span>${room} hab.</span>
+            </label>
+        `).join('');
+    }
+    
+    function applyFiltersAndSort() {
+        filters.zones = Array.from(zoneFiltersContainer.querySelectorAll('input:checked')).map(el => el.value);
+        filters.extras = Array.from(extrasFiltersContainer.querySelectorAll('input:checked')).map(el => el.value);
+        filters.rooms = Array.from(roomsFiltersContainer.querySelectorAll('input:checked')).map(el => parseInt(el.value));
+
+        let filteredProperties = propertiesData.filter(p => {
+            const zoneMatch = filters.zones.length === 0 || filters.zones.includes(p.zone);
+            const extrasMatch = filters.extras.every(extra => p.extras.includes(extra));
+            const roomsMatch = filters.rooms.length === 0 || filters.rooms.includes(p.rooms);
+            return zoneMatch && extrasMatch && roomsMatch;
+        });
+        
+        const sortValue = sortBySelect.value;
+        filteredProperties.sort((a, b) => {
+            switch(sortValue) {
+                case 'diff_perc_desc': return b.diff_perc - a.diff_perc;
+                case 'price_asc': return a.price - b.price;
+                case 'price_desc': return b.price - a.price;
+                case 'appraisal_desc': return b.appraisal - a.appraisal;
+                default: return 0;
+            }
+        });
+
+        renderProperties(filteredProperties);
+    }
+    
+    function resetFilters() {
+        zoneFiltersContainer.querySelectorAll('input:checked').forEach(el => el.checked = false);
+        extrasFiltersContainer.querySelectorAll('input:checked').forEach(el => el.checked = false);
+        roomsFiltersContainer.querySelectorAll('input:checked').forEach(el => el.checked = false);
+        sortBySelect.value = 'diff_perc_desc';
+        applyFiltersAndSort();
+    }
+    
+    window.openModal = (id) => {
+        const property = propertiesData.find(p => p.id === id);
+        if (!property) return;
+
+        modalContent.innerHTML = `
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-sm font-semibold uppercase tracking-wider text-cyan-600 bg-cyan-50 px-2 py-1 rounded-full">${property.zone}</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mt-2">${property.features}</h2>
+                        <p class="text-slate-500">${property.location}</p>
+                    </div>
+                    <button class="text-slate-400 hover:text-slate-600" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                         <h4 class="font-bold text-slate-800 mb-3">Detalles del Inmueble</h4>
+                         <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-500">Superficie:</span> <span class="font-semibold">${property.sqm} m²</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Habitaciones:</span> <span class="font-semibold">${property.rooms}</span></div>
+                            <div class="flex justify-between items-start"><span class="text-slate-500">Extras:</span> <span class="font-semibold text-right">${property.extras.join(', ')}</span></div>
+                         </div>
+                         <h4 class="font-bold text-slate-800 mb-3 mt-6">Análisis de Valor</h4>
+                         <div class="space-y-3 text-sm">
+                            <div class="flex justify-between"><span class="text-slate-500">Precio de Venta:</span> <span class="font-semibold text-cyan-700">${formatCurrency(property.price)}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Valor de Peritaje:</span> <span class="font-semibold text-cyan-700">${formatCurrency(property.appraisal)}</span></div>
+                            <div class="flex justify-between bg-green-50 p-2 rounded-md"><span class="text-green-800 font-semibold">Diferencial (Valor):</span> <span class="font-bold text-green-800">${formatCurrency(property.diff_eur)}</span></div>
+                            <div class="flex justify-between bg-green-50 p-2 rounded-md"><span class="text-green-800 font-semibold">Diferencial (%):</span> <span class="font-bold text-green-800">+${property.diff_perc.toFixed(1)}%</span></div>
+                         </div>
+                    </div>
+                     <div class="bg-slate-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-slate-800 mb-2">Observaciones y Puntos de Alerta</h4>
+                        <p class="text-slate-600 text-sm italic">${property.alert}</p>
+                    </div>
+                </div>
+            </div>
+             <div class="bg-slate-100 p-4 text-right">
+                <button class="px-6 py-2 bg-slate-600 text-white font-semibold rounded-lg hover:bg-slate-700 transition" onclick="closeModal()">Cerrar</button>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            modalContent.classList.remove('scale-95', 'opacity-0');
+        }, 50);
+    }
+    
+    window.closeModal = () => {
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 200);
+    }
+
+    function renderCharts() {
+        const profitabilityCtx = document.getElementById('profitabilityByZoneChart').getContext('2d');
+        const priceVsAppraisalCtx = document.getElementById('priceVsAppraisalChart').getContext('2d');
+
+        const zones = [...new Set(propertiesData.map(p => p.zone))];
+        const avgProfitabilityByZone = zones.map(zone => {
+            const zoneProps = propertiesData.filter(p => p.zone === zone);
+            const totalProfit = zoneProps.reduce((acc, curr) => acc + curr.diff_perc, 0);
+            return totalProfit / zoneProps.length;
+        });
+
+        new Chart(profitabilityCtx, {
+            type: 'bar',
+            data: {
+                labels: zones,
+                datasets: [{
+                    label: 'Rentabilidad Media (%)',
+                    data: avgProfitabilityByZone,
+                    backgroundColor: 'rgba(8, 145, 178, 0.6)',
+                    borderColor: 'rgba(8, 145, 178, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: 'Rentabilidad (%)' } } }
+            }
+        });
+        
+        const scatterData = propertiesData.map(p => ({ x: p.price, y: p.appraisal, label: p.id }));
+        
+        new Chart(priceVsAppraisalCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Propiedades',
+                    data: scatterData,
+                    backgroundColor: 'rgba(22, 163, 74, 0.7)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.data[context.dataIndex].label || '';
+                                if (label) { label += ': '; }
+                                label += `(Venta: ${formatCurrency(context.parsed.x)}, Peritaje: ${formatCurrency(context.parsed.y)})`;
+                                return label;
                             }
                         }
                     },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: { color: '#A5D7E8' },
-                            ticks: { font: { weight: 'bold' }, color: '#19376D', callback: value => `${value.toLocaleString('es-ES')} €` }
-                        },
-                        y: {
-                           grid: { display: false },
-                           ticks: { font: { weight: 'bold' }, color: '#19376D' }
-                        }
-                    }
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Precio de Venta (€)' } },
+                    y: { title: { display: true, text: 'Valor de Peritaje (€)' } }
                 }
-            });
-
-            // Gemini API Integration
-            const analyzeButton = document.getElementById('analyze-button');
-            const aiResultContainer = document.getElementById('ai-result');
-            const loader = document.getElementById('loader');
-            const recommendationText = document.getElementById('recommendation-text');
-            const budgetInput = document.getElementById('budget');
-            const riskSelect = document.getElementById('risk');
-            const experienceSelect = document.getElementById('experience');
-
-            analyzeButton.addEventListener('click', async () => {
-                const budget = budgetInput.value;
-                const risk = riskSelect.value;
-                const experience = experienceSelect.value;
-
-                if (!budget) {
-                    alert('Por favor, introduzca su presupuesto.');
-                    return;
-                }
-
-                aiResultContainer.classList.remove('hidden');
-                loader.classList.remove('hidden');
-                recommendationText.textContent = '';
-                
-                const prompt = `
-                    Eres un asesor experto en inversiones inmobiliarias en Águilas, Murcia, España. Un cliente te proporciona su perfil. Analízalo y recomiéndale una de dos estrategias de inversión de forma concisa y directa.
-
-                    Estrategia 1: 'Valor por Reforma'. Consiste en comprar un piso antiguo y espacioso en el centro para reformarlo íntegramente. Requiere más capital total (compra + reforma), tolerancia a los imprevistos de una obra y es ideal para quienes tienen experiencia en reformas. El potencial de plusvalía es mayor y la ubicación es premium.
-
-                    Estrategia 2: 'Valor por Precio Absoluto'. Consiste en comprar el piso con el precio de entrada más bajo posible, normalmente en zonas periféricas como Las Majadas. Requiere menor inversión inicial, tiene menor riesgo de obra y es ideal para quienes tienen poca experiencia en reformas. El potencial de revalorización es más moderado.
-
-                    Analiza el siguiente perfil de inversor:
-                    - Presupuesto Total: ${budget} euros
-                    - Tolerancia al Riesgo: ${risk}
-                    - Experiencia en Reformas: ${experience}
-
-                    Basado en este perfil, ¿qué estrategia le recomiendas y por qué? Tu respuesta debe ser clara, en español, concisa (máximo 3-4 frases), y dirigida directamente al inversor. No uses markdown. Empieza directamente con la recomendación.
-                `;
-
-                try {
-                    let chatHistory = [];
-                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                    const payload = { contents: chatHistory };
-                    const apiKey = ""; 
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                    
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Error de la API: ${response.statusText}`);
-                    }
-
-                    const result = await response.json();
-
-                    loader.classList.add('hidden');
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        recommendationText.textContent = text;
-                    } else {
-                        recommendationText.textContent = 'No se pudo obtener una recomendación. Por favor, inténtelo de nuevo.';
-                    }
-                } catch (error) {
-                    console.error("Error calling Gemini API:", error);
-                    loader.classList.add('hidden');
-                    recommendationText.textContent = 'Hubo un error al contactar al asesor de IA. Verifique su conexión o inténtelo más tarde.';
-                }
-            });
-            
-            // Table filter logic
-            const filterButtons = document.querySelectorAll('.table-filter-btn');
-            const tables = document.querySelectorAll('.listings-table');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tableIdToShow = `table-${button.dataset.table}`;
-
-                    // Hide all tables
-                    tables.forEach(table => {
-                        table.classList.add('hidden');
-                    });
-
-                    // Show the selected table
-                    document.getElementById(tableIdToShow).classList.remove('hidden');
-                    
-                    // Update button styles
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('bg-secondary', 'text-white');
-                        btn.classList.add('bg-blue-100', 'text-secondary');
-                    });
-                    button.classList.add('bg-secondary', 'text-white');
-                    button.classList.remove('bg-blue-100', 'text-secondary');
-                });
-            });
-
+            }
         });
-    </script>
+    }
+
+    // Initial setup
+    renderZones();
+    renderStrategy();
+    renderFilters();
+    applyFiltersAndSort();
+    renderCharts();
+    
+    zoneFiltersContainer.addEventListener('change', applyFiltersAndSort);
+    extrasFiltersContainer.addEventListener('change', applyFiltersAndSort);
+    roomsFiltersContainer.addEventListener('change', applyFiltersAndSort);
+    sortBySelect.addEventListener('change', applyFiltersAndSort);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+});
+</script>
 </body>
 </html>
