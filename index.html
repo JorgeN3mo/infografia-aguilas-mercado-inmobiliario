@@ -33,6 +33,12 @@
         
         .brand-blue { color: #005A9C; }
         .border-subtle { border-color: #E2E8F0; }
+
+        /* Estilo para el toggle activo */
+        .toggle-active {
+            background-color: #005A9C;
+            color: white;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -56,131 +62,73 @@
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="container mx-auto px-4 py-8">
-        <section class="mb-8">
-            <h1 class="text-3xl font-bold tracking-tight">Informe de Costa</h1>
-            <p class="text-gray-600 mt-1">Playas ordenadas por recomendación</p>
+        
+        <!-- ===== FILTROS ===== -->
+        <section class="mb-8 p-4 bg-white rounded-lg border border-subtle shadow-sm">
+            <div class="flex flex-col sm:flex-row gap-4">
+                <!-- Filtro de Tiempo -->
+                <div class="w-full sm:w-auto flex-shrink-0">
+                    <div class="flex bg-gray-100 rounded-lg p-1">
+                        <button id="btn-ahora" class="w-full px-4 py-2 text-sm font-bold rounded-md toggle-active">Ahora</button>
+                        <button id="btn-manana" class="w-full px-4 py-2 text-sm font-bold rounded-md">Mañana</button>
+                    </div>
+                </div>
+                <!-- Filtro de Zona -->
+                <div class="w-full sm:w-full">
+                     <select id="zone-filter" class="w-full bg-gray-100 border-none rounded-lg px-4 py-2.5 text-sm font-bold text-gray-700 focus:ring-2 focus:ring-blue-500">
+                        <option value="todas">Todas las Zonas</option>
+                        <option value="cuatro-calas">Cuatro Calas</option>
+                        <option value="casica-verde">Casica Verde-Matalentisco</option>
+                        <option value="urbanas">Playas Urbanas</option>
+                        <option value="hornillo">Bahía de El Hornillo</option>
+                        <option value="calabardina">Calabardina</option>
+                    </select>
+                </div>
+            </div>
         </section>
 
-        <!-- Layout de 1 columna en móvil, 2 en tablets y más en desktop -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            
-            <!-- Ejemplo 1: Recomendada, Bandera Verde -->
-            <div class="bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col">
-                <!-- Bloque 1: Cabecera -->
-                <div class="flex justify-between items-start">
-                    <h3 class="font-bold text-lg">La Carolina</h3>
-                    <div class="text-right flex-shrink-0">
-                        <p class="font-semibold text-sm text-green-600">Recomendada</p>
-                        <p class="text-xs text-gray-400">Act. 10:25h</p>
-                    </div>
-                </div>
-                <!-- Bloque 2: Condiciones Generales -->
-                <div class="border-t border-subtle pt-3 text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/3"><p class="font-semibold">☀️ 29°C</p><p class="text-xs text-gray-500">Temp.</p></div>
-                        <div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div>
-                        <div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">Viento</p></div>
-                    </div>
-                </div>
-                <!-- Bloque 3: Vigilancia -->
-                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/2 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg>
-                            <p class="font-semibold">Verde</p>
-                        </div>
-                        <div class="w-1/2 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <p class="font-semibold">Baja</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- ===== VISTA AHORA ===== -->
+        <div id="ahora-view">
+            <section class="mb-6">
+                <h2 class="text-2xl font-bold tracking-tight">Estado Actual</h2>
+                <p class="text-gray-600">Playas ordenadas por recomendación</p>
+            </section>
+            <div id="grid-ahora" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Tarjetas de "Ahora" -->
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="cuatro-calas" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Carolina</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p><p class="text-xs text-gray-400">Act. 11:15h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 29°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">5 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Verde</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Baja</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="casica-verde" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Casica Verde</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p><p class="text-xs text-gray-400">Act. 11:18h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 29°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">8 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Verde</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Media</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Colonia</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p><p class="text-xs text-gray-400">Act. 11:22h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 30°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">3 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Verde</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Media</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Las Delicias</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p><p class="text-xs text-gray-400">Act. 11:24h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 30°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">4 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Verde</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Baja</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="hornillo" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">El Hornillo</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p><p class="text-xs text-gray-400">Act. 11:20h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 30°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Plato</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">2 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Verde</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Baja</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="cuatro-calas" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Calarreona</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p><p class="text-xs text-gray-400">Act. 11:12h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 29°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">12 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Verde</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Alta</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Poniente</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p><p class="text-xs text-gray-400">Act. 11:25h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 31°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">18 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-yellow" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Amarilla</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Media</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Levante</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p><p class="text-xs text-gray-400">Act. 11:28h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 31°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">20 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-yellow" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Amarilla</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Alta</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="calabardina" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Calabardina</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p><p class="text-xs text-gray-400">Act. 11:10h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 30°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">15 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-yellow" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Amarilla</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Media</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-red p-4 shadow-sm space-y-3 flex flex-col" data-zone="cuatro-calas" data-score="3"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Higuerica</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-red-600">No Recomendada</p><p class="text-xs text-gray-400">Act. 11:05h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 28°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Fuerte</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">28 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-red" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Roja</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Nula</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-red p-4 shadow-sm space-y-3 flex flex-col" data-zone="casica-verde" data-score="3"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Matalentisco</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-red-600">No Recomendada</p><p class="text-xs text-gray-400">Act. 11:02h</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ 28°C</p><p class="text-xs text-gray-500">Temp.</p></div><div class="w-1/3"><p class="font-semibold">🌊 Fuerte</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">30 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 flag-icon-red" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg><p class="font-semibold">Roja</p></div><p class="text-xs text-gray-500 mt-1">Bandera</p></div><div class="w-1/2 text-center"><div class="flex items-center justify-center gap-2"><svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><p class="font-semibold">Nula</p></div><p class="text-xs text-gray-500 mt-1">Ocupación</p></div></div></div></div>
             </div>
+        </div>
 
-            <!-- Ejemplo 2: Aceptable (mucha gente), Bandera Verde -->
-            <div class="bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col">
-                <div class="flex justify-between items-start">
-                    <h3 class="font-bold text-lg">Playa de Levante</h3>
-                    <div class="text-right flex-shrink-0">
-                        <p class="font-semibold text-sm text-yellow-600">Aceptable</p>
-                        <p class="text-xs text-gray-400">Act. 10:15h</p>
-                    </div>
-                </div>
-                <div class="border-t border-subtle pt-3 text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/3"><p class="font-semibold">☀️ 30°C</p><p class="text-xs text-gray-500">Temp.</p></div>
-                        <div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div>
-                        <div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">Viento</p></div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/2 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg>
-                            <p class="font-semibold">Verde</p>
-                        </div>
-                        <div class="w-1/2 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <p class="font-semibold">Alta</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- ===== VISTA MAÑANA ===== -->
+        <div id="manana-view" class="hidden">
+            <section class="mb-6">
+                <h2 class="text-2xl font-bold tracking-tight">Previsión para Mañana</h2>
+                <p class="text-gray-600">Playas ordenadas por recomendación prevista</p>
+            </section>
+            <div id="grid-manana" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Tarjetas de "Mañana" -->
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="cuatro-calas" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Carolina</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">5 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="casica-verde" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Casica Verde</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">8 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Colonia</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">3 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Las Delicias</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">4 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col" data-zone="hornillo" data-score="1"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">El Hornillo</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-green-600">Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Plato</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">2 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="cuatro-calas" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Calarreona</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">12 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Poniente</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">18 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="urbanas" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Levante</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">20 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col" data-zone="calabardina" data-score="2"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Calabardina</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-yellow-600">Aceptable</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Soleado</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Rizada</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">15 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-red p-4 shadow-sm space-y-3 flex flex-col" data-zone="cuatro-calas" data-score="3"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">La Higuerica</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-red-600">No Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Nubes y Sol</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">🌊 Fuerte</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">28 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
+                <div class="beach-card bg-white rounded-lg border border-subtle border-l-4 score-red p-4 shadow-sm space-y-3 flex flex-col" data-zone="casica-verde" data-score="3"><div class="flex justify-between items-start"><h3 class="font-bold text-lg">Matalentisco</h3><div class="text-right flex-shrink-0"><p class="font-semibold text-sm text-red-600">No Recomendada</p></div></div><div class="border-t border-subtle pt-3 text-sm"><div class="flex justify-between items-center text-center"><div class="w-1/3"><p class="font-semibold">☀️ Nubes y Sol</p><p class="text-xs text-gray-500">Tiempo</p></div><div class="w-1/3"><p class="font-semibold">� Fuerte</p><p class="text-xs text-gray-500">Mar</p></div><div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">30 km/h</p></div></div></div><div class="bg-gray-50 rounded-md p-3 mt-auto text-sm"><div class="flex justify-center items-center gap-2 text-gray-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg><p class="font-semibold">Con servicio de vigilancia</p></div></div></div>
             </div>
-
-            <!-- Ejemplo 3: Playa sin vigilancia -->
-             <div class="bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col">
-                <div class="flex justify-between items-start">
-                    <h3 class="font-bold text-lg">Cala de la Herradura</h3>
-                    <div class="text-right flex-shrink-0">
-                        <p class="font-semibold text-sm text-green-600">Recomendada</p>
-                        <p class="text-xs text-gray-400">Act. 10:05h</p>
-                    </div>
-                </div>
-                <div class="border-t border-subtle pt-3 text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/3"><p class="font-semibold">☀️ 28°C</p><p class="text-xs text-gray-500">Temp.</p></div>
-                        <div class="w-1/3"><p class="font-semibold">🌊 Plato</p><p class="text-xs text-gray-500">Mar</p></div>
-                        <div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">Viento</p></div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
-                    <div class="flex justify-center items-center gap-2 text-gray-500">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                        <p class="font-semibold">Sin servicio de vigilancia</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ejemplo 4: No Recomendada, Bandera Roja -->
-            <div class="bg-white rounded-lg border border-subtle border-l-4 score-red p-4 shadow-sm space-y-3 flex flex-col">
-                <div class="flex justify-between items-start">
-                    <h3 class="font-bold text-lg">Matalentisco</h3>
-                    <div class="text-right flex-shrink-0">
-                        <p class="font-semibold text-sm text-red-600">No Recomendada</p>
-                        <p class="text-xs text-gray-400">Act. 09:55h</p>
-                    </div>
-                </div>
-                <div class="border-t border-subtle pt-3 text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/3"><p class="font-semibold">☀️ 27°C</p><p class="text-xs text-gray-500">Temp.</p></div>
-                        <div class="w-1/3"><p class="font-semibold">🌊 Fuerte</p><p class="text-xs text-gray-500">Mar</p></div>
-                        <div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">Viento</p></div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
-                    <div class="flex justify-between items-center text-center">
-                        <div class="w-1/2 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 flag-icon-red" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg>
-                            <p class="font-semibold">Roja</p>
-                        </div>
-                        <div class="w-1/2 flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <p class="font-semibold">Nula</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </main>
 
@@ -193,7 +141,67 @@
     </footer>
 
     <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- ELEMENTOS DEL DOM ---
+            const btnAhora = document.getElementById('btn-ahora');
+            const btnManana = document.getElementById('btn-manana');
+            const ahoraView = document.getElementById('ahora-view');
+            const mananaView = document.getElementById('manana-view');
+            const zoneFilter = document.getElementById('zone-filter');
+            
+            // --- LÓGICA DEL TOGGLE AHORA/MAÑANA ---
+            function switchView(view) {
+                if (view === 'ahora') {
+                    ahoraView.classList.remove('hidden');
+                    mananaView.classList.add('hidden');
+                    btnAhora.classList.add('toggle-active');
+                    btnManana.classList.remove('toggle-active');
+                } else {
+                    ahoraView.classList.add('hidden');
+                    mananaView.classList.remove('hidden');
+                    btnAhora.classList.remove('toggle-active');
+                    btnManana.classList.add('toggle-active');
+                }
+                filterAndSortBeaches();
+            }
+
+            btnAhora.addEventListener('click', () => switchView('ahora'));
+            btnManana.addEventListener('click', () => switchView('manana'));
+
+            // --- LÓGICA DE FILTRADO Y ORDENACIÓN ---
+            function filterAndSortBeaches() {
+                const selectedZone = zoneFilter.value;
+                const isAhoraView = !ahoraView.classList.contains('hidden');
+                const grid = document.getElementById(isAhoraView ? 'grid-ahora' : 'grid-manana');
+                
+                const cards = Array.from(grid.querySelectorAll('.beach-card'));
+
+                cards.forEach(card => {
+                    const cardZone = card.dataset.zone;
+                    if (selectedZone === 'todas' || cardZone === selectedZone) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                const visibleCards = cards.filter(card => card.style.display !== 'none');
+                
+                visibleCards.sort((a, b) => {
+                    const scoreA = parseInt(a.dataset.score, 10);
+                    const scoreB = parseInt(b.dataset.score, 10);
+                    return scoreA - scoreB;
+                });
+
+                visibleCards.forEach(card => grid.appendChild(card));
+            }
+
+            zoneFilter.addEventListener('change', filterAndSortBeaches);
+            
+            document.getElementById('year').textContent = new Date().getFullYear();
+            filterAndSortBeaches(); 
+        });
     </script>
 </body>
 </html>
+�
