@@ -3,458 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infografía de Inversión Inmobiliaria - Águilas (Murcia)</title>
+    <title>Playas de Águilas - Informe de Costa en Tiempo Real</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <style>
+        html { -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Un azul-gris muy claro */
+            background-color: #F8F9FA;
+            color: #212529;
         }
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #e2e8f0;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        /* Custom range slider styles */
-        input[type=range] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            background: #cbd5e1;
-            border-radius: 5px;
-            outline: none;
-            transition: opacity .2s;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #2563eb; /* blue-600 */
-            cursor: pointer;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        }
-        input[type=range]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #2563eb;
-            cursor: pointer;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
-        }
-        .potential-muy-alto { border-left-color: #7c3aed; /* violet-600 */ }
-        .potential-alto { border-left-color: #db2777; /* pink-600 */ }
-        .potential-moderado { border-left-color: #f97316; /* orange-500 */ }
-        .potential-bajo { border-left-color: #16a34a; /* green-600 */ }
+        
+        /* Colores de recomendación (borde) */
+        .score-green { border-color: #10B981; }
+        .score-yellow { border-color: #FBBF24; }
+        .score-red { border-color: #EF4444; }
+        
+        /* Colores para el icono de la bandera */
+        .flag-icon-green { color: #28A745; }
+        .flag-icon-yellow { color: #FFC107; }
+        .flag-icon-red { color: #DC3545; }
+        
+        .brand-blue { color: #005A9C; }
+        .border-subtle { border-color: #E2E8F0; }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="antialiased">
 
-    <!-- Header -->
-    <header class="bg-white shadow-lg sticky top-0 z-30">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">Dashboard Inmobiliario de Águilas</h1>
-                <p class="text-sm md:text-md text-slate-500">85 Activos Analizados (< €200k)</p>
-            </div>
-             <i class="fa-solid fa-house-signal text-3xl text-blue-600"></i>
+    <!-- ===== HEADER ===== -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-subtle">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2">
+                <!-- Logo Monocromo -->
+                <svg class="h-8 w-8 brand-blue" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 10L10 90H90L50 10Z" stroke="currentColor" stroke-width="10" stroke-linejoin="round"/>
+                    <path d="M25 65C41.6667 75 58.3333 75 75 65" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+                </svg>
+                <span class="font-bold text-lg tracking-tight">playasdeaguilas.es</span>
+            </a>
+            <button class="text-gray-500 p-2 rounded-md hover:bg-gray-100 hover:text-[#005A9C] transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
         </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
-
-        <!-- Filters Sidebar -->
-        <aside class="lg:col-span-1 bg-white p-5 rounded-xl shadow-lg lg:sticky lg:top-28 self-start">
-            <h2 class="text-xl font-bold mb-4 border-b-2 border-slate-200 pb-2 flex items-center">
-                <i class="fa-solid fa-filter text-blue-600 mr-2"></i>Filtros
-            </h2>
-            
-            <form id="filters-form">
-                <!-- Text Search -->
-                <div class="mb-5">
-                    <label for="searchText" class="block text-sm font-semibold text-slate-700 mb-1">Buscar por Descripción</label>
-                    <div class="relative">
-                        <input type="text" id="searchText" placeholder="Ej: Calle Aire, céntrico..." class="w-full border-slate-300 rounded-lg shadow-sm pl-3 pr-8 py-2 focus:ring-blue-500 focus:border-blue-500">
-                        <i class="fa-solid fa-magnifying-glass absolute top-1/2 right-3 -translate-y-1/2 text-slate-400"></i>
-                    </div>
-                </div>
-
-                <!-- Price Filter -->
-                <div class="mb-5">
-                    <label for="priceRange" class="block text-sm font-semibold text-slate-700 mb-1">Precio de Venta</label>
-                    <input type="range" id="priceRange" min="10000" max="200000" step="1000" value="200000" class="w-full">
-                    <div class="text-sm text-slate-500 text-right mt-1">Hasta <span id="priceValue" class="font-bold text-slate-700">200.000 €</span></div>
-                </div>
-                
-                <!-- Zone Filter -->
-                <div class="mb-5">
-                    <h3 class="block text-sm font-semibold text-slate-700 mb-2">Zona / Barrio</h3>
-                    <div id="zoneFilters" class="space-y-2 max-h-40 overflow-y-auto pr-2">
-                        <!-- Checkboxes generated by JS -->
-                    </div>
-                </div>
-                
-                <!-- Features Filter -->
-                 <div class="mb-5">
-                    <h3 class="block text-sm font-semibold text-slate-700 mb-2">Características Principales</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                         <label class="flex items-center p-2 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
-                            <input type="checkbox" data-feature="ascensor" class="feature-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-slate-600">Ascensor</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
-                            <input type="checkbox" data-feature="terraza" class="feature-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-slate-600">Terraza</span>
-                        </label>
-                         <label class="flex items-center p-2 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
-                            <input type="checkbox" data-feature="reforma" class="feature-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-slate-600">Reforma</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md bg-slate-50 hover:bg-slate-100 transition-colors cursor-pointer">
-                            <input type="checkbox" data-feature="piscina" class="feature-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-slate-600">Piscina</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Investment Potential Filter -->
-                <div class="mb-5">
-                    <h3 class="block text-sm font-semibold text-slate-700 mb-2">Potencial de Inversión</h3>
-                    <div id="potentialFilters" class="space-y-2">
-                        <!-- Checkboxes generated by JS -->
-                    </div>
-                </div>
-                 
-                <!-- Reset Button -->
-                <button type="button" id="resetFilters" class="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 mt-4 flex items-center justify-center">
-                    <i class="fa-solid fa-rotate-right mr-2"></i>Limpiar Filtros
-                </button>
-            </form>
-        </aside>
-
-        <!-- Results Section -->
-        <section class="lg:col-span-3">
-            <!-- Summary and Sorting Controls -->
-            <div class="flex flex-col md:flex-row justify-between items-center mb-4 bg-white p-3 rounded-xl shadow-md">
-                <p class="text-slate-700 font-medium mb-2 md:mb-0">
-                    <span id="propertyCount" class="font-bold text-blue-600 text-lg">0</span> inmuebles encontrados
-                </p>
-                <div class="flex items-center">
-                    <label for="sortBy" class="mr-2 text-sm font-medium text-slate-700">Ordenar por:</label>
-                    <select id="sortBy" class="border-slate-300 rounded-lg shadow-sm text-sm focus:ring-blue-500 focus:border-blue-500">
-                        <option value="default">Relevancia</option>
-                        <option value="price-asc">Precio (Menor a Mayor)</option>
-                        <option value="price-desc">Precio (Mayor a Menor)</option>
-                        <option value="tpr-desc">Tasación (Mayor a Menor)</option>
-                        <option value="tpr-asc">Tasación (Menor a Mayor)</option>
-                        <option value="potential-asc">Potencial (Mayor a Menor)</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Property Cards Grid -->
-            <div id="property-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
-                <!-- Cards generated by JS -->
-            </div>
-            
-            <!-- No Results Message -->
-            <div id="no-results" class="hidden text-center py-20 bg-white rounded-xl shadow-md">
-                <i class="fa-solid fa-house-circle-xmark text-5xl text-slate-400"></i>
-                <h3 class="mt-4 text-xl font-bold text-slate-800">No se encontraron resultados</h3>
-                <p class="mt-1 text-slate-500">Prueba a modificar o limpiar los filtros para encontrar más inmuebles.</p>
-            </div>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container mx-auto px-4 py-8">
+        <section class="mb-8">
+            <h1 class="text-3xl font-bold tracking-tight">Informe de Costa</h1>
+            <p class="text-gray-600 mt-1">Playas ordenadas por recomendación</p>
         </section>
+
+        <!-- Layout de 1 columna en móvil, 2 en tablets y más en desktop -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            
+            <!-- Ejemplo 1: Recomendada, Bandera Verde -->
+            <div class="bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col">
+                <!-- Bloque 1: Cabecera -->
+                <div class="flex justify-between items-start">
+                    <h3 class="font-bold text-lg">La Carolina</h3>
+                    <div class="text-right flex-shrink-0">
+                        <p class="font-semibold text-sm text-green-600">Recomendada</p>
+                        <p class="text-xs text-gray-400">Act. 10:25h</p>
+                    </div>
+                </div>
+                <!-- Bloque 2: Condiciones Generales -->
+                <div class="border-t border-subtle pt-3 text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/3"><p class="font-semibold">☀️ 29°C</p><p class="text-xs text-gray-500">Temp.</p></div>
+                        <div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div>
+                        <div class="w-1/3"><p class="font-semibold">💨 Lebeche</p><p class="text-xs text-gray-500">Viento</p></div>
+                    </div>
+                </div>
+                <!-- Bloque 3: Vigilancia -->
+                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/2 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg>
+                            <p class="font-semibold">Verde</p>
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <p class="font-semibold">Baja</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2: Aceptable (mucha gente), Bandera Verde -->
+            <div class="bg-white rounded-lg border border-subtle border-l-4 score-yellow p-4 shadow-sm space-y-3 flex flex-col">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-bold text-lg">Playa de Levante</h3>
+                    <div class="text-right flex-shrink-0">
+                        <p class="font-semibold text-sm text-yellow-600">Aceptable</p>
+                        <p class="text-xs text-gray-400">Act. 10:15h</p>
+                    </div>
+                </div>
+                <div class="border-t border-subtle pt-3 text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/3"><p class="font-semibold">☀️ 30°C</p><p class="text-xs text-gray-500">Temp.</p></div>
+                        <div class="w-1/3"><p class="font-semibold">🌊 Calma</p><p class="text-xs text-gray-500">Mar</p></div>
+                        <div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">Viento</p></div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/2 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 flag-icon-green" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg>
+                            <p class="font-semibold">Verde</p>
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <p class="font-semibold">Alta</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3: Playa sin vigilancia -->
+             <div class="bg-white rounded-lg border border-subtle border-l-4 score-green p-4 shadow-sm space-y-3 flex flex-col">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-bold text-lg">Cala de la Herradura</h3>
+                    <div class="text-right flex-shrink-0">
+                        <p class="font-semibold text-sm text-green-600">Recomendada</p>
+                        <p class="text-xs text-gray-400">Act. 10:05h</p>
+                    </div>
+                </div>
+                <div class="border-t border-subtle pt-3 text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/3"><p class="font-semibold">☀️ 28°C</p><p class="text-xs text-gray-500">Temp.</p></div>
+                        <div class="w-1/3"><p class="font-semibold">🌊 Plato</p><p class="text-xs text-gray-500">Mar</p></div>
+                        <div class="w-1/3"><p class="font-semibold">💨 Calma</p><p class="text-xs text-gray-500">Viento</p></div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
+                    <div class="flex justify-center items-center gap-2 text-gray-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        <p class="font-semibold">Sin servicio de vigilancia</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 4: No Recomendada, Bandera Roja -->
+            <div class="bg-white rounded-lg border border-subtle border-l-4 score-red p-4 shadow-sm space-y-3 flex flex-col">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-bold text-lg">Matalentisco</h3>
+                    <div class="text-right flex-shrink-0">
+                        <p class="font-semibold text-sm text-red-600">No Recomendada</p>
+                        <p class="text-xs text-gray-400">Act. 09:55h</p>
+                    </div>
+                </div>
+                <div class="border-t border-subtle pt-3 text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/3"><p class="font-semibold">☀️ 27°C</p><p class="text-xs text-gray-500">Temp.</p></div>
+                        <div class="w-1/3"><p class="font-semibold">🌊 Fuerte</p><p class="text-xs text-gray-500">Mar</p></div>
+                        <div class="w-1/3"><p class="font-semibold">💨 Levante</p><p class="text-xs text-gray-500">Viento</p></div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-md p-3 border-t border-subtle mt-auto text-sm">
+                    <div class="flex justify-between items-center text-center">
+                        <div class="w-1/2 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 flag-icon-red" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm2 0v7h10V8H5z" clip-rule="evenodd"></path></svg>
+                            <p class="font-semibold">Roja</p>
+                        </div>
+                        <div class="w-1/2 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <p class="font-semibold">Nula</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </main>
 
+    <!-- ===== FOOTER ===== -->
+    <footer class="mt-12 border-t border-subtle bg-white">
+        <div class="container mx-auto px-4 py-6 text-center text-gray-500">
+            <p class="text-sm">&copy; <span id="year">2025</span> playasdeaguilas.es - Todos los derechos reservados.</p>
+            <p class="text-xs mt-2">Fuentes de datos: AEMET, 112 Región de Murcia, colaboradores locales.</p>
+        </div>
+    </footer>
+
     <script>
-    // --- Data Source ---
-    // Extracted and parsed from the provided markdown table.
-    const propertiesData = [
-        {id: '001', desc: 'Chalet en calle de Asperillas', zone: 'Centro', price: 13200, surface: 345, rooms: '4', baths: 'N/D', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Precio extremadamente bajo para la superficie. Probable incidencia legal grave no declarada o ruina económica. Riesgo máximo.', tpr: 86250, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/101533326/'},
-        {id: '002', desc: 'Chalet en calle Paloma', zone: 'Centro', price: 26400, surface: 48, rooms: '2', baths: 'N/D', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Activo de bajo coste en zona céntrica. Ideal para inversión de entrada, pero la falta de detalles sobre el estado real es un riesgo.', tpr: 48000, potential: 'Moderado', link: 'https://www.idealista.com/inmueble/102563021/'},
-        {id: '003', desc: 'Piso en C/ Maestro Gines Ortiz Ramirez', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 26700, surface: 69, rooms: '2', baths: '2', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Oportunidad para inversores. El bajo precio y la necesidad de reforma sugieren un activo para estrategia "fix-and-flip". Zona económica.', tpr: 47005, potential: 'Alto (Value-Add)', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking/161274984/d'},
-        {id: '004', desc: 'Piso en Ctra Prolongación Virgen de Lourdes', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 29000, surface: 64, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Precio competitivo para un piso con garaje. La zona es de las más asequibles, limitando el potencial de revalorización.', tpr: 54400, potential: 'Moderado', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking/156100539/d'},
-        {id: '005', desc: 'Piso en C/ Maestro Ginés Ortiz Ramírez', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 29300, surface: 64, rooms: '1', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Similar al ID 003. Activo de bajo coste para reforma. El ser de 1 habitación limita el público objetivo para alquiler/venta.', tpr: 43520, potential: 'Moderado (Value-Add)', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking/176985010/d'},
-        {id: '006', desc: 'Piso en Camino del Cementerio', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 29500, surface: 110, rooms: '3', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Gran superficie a precio muy bajo. Necesidad de reforma confirmada. Alto potencial de valor añadido si la estructura está en buen estado.', tpr: 74800, potential: 'Alto (Value-Add)', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/todas-las-zonas/177006859/d'},
-        {id: '007', desc: 'Piso en calle Antonio Manzanera', zone: 'Centro', price: 35000, surface: 55, rooms: '1', baths: 'N/D', elevator: false, reform: true, pool: false, terrace: false, analysis: 'INMUEBLE OCUPADO. Riesgo legal y de desahucio muy elevado (65% descuento TPR). Inversión en un proceso legal, no en un activo físico.', tpr: 24063, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/105745734/'},
-        {id: '008', desc: 'Piso en calle Almería', zone: 'Centro', price: 36000, surface: 70, rooms: '3', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Precio atractivo para un piso de 3 hab en el centro. La falta de ascensor es el principal factor de riesgo para la reventa.', tpr: 78750, potential: 'Moderado', link: 'https://www.idealista.com/inmueble/105376288/'},
-        {id: '009', desc: 'Piso en C/ Quico y Maldonado', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 37500, surface: 106, rooms: '4', baths: '2', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Oportunidad para inversores. Gran tamaño, ideal para familias tras una reforma. El precio bajo refleja la necesidad de inversión.', tpr: 72080, potential: 'Alto (Value-Add)', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/todas-las-zonas/176984880/d'},
-        {id: '010', desc: 'Piso en calle Jaén, 14', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 37800, surface: 106, rooms: '3', baths: '2', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Similar al ID 009. Activo de gran tamaño para reforma en zona económica. Buen potencial de valor añadido.', tpr: 72080, potential: 'Alto (Value-Add)', link: 'https://www.idealista.com/inmueble/106656346/'},
-        {id: '011', desc: 'Casa adosada en calle Escalera', zone: 'Centro', price: 39700, surface: 72, rooms: '3', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'PRECISA REFORMAS. Ubicación céntrica a 400m del puerto. Oportunidad de valor añadido en una zona con demanda.', tpr: 72000, potential: 'Alto (Value-Add)', link: 'https://www.idealista.com/inmueble/107721519/'},
-        {id: '012', desc: 'Casa en Residencia San Francisco', zone: 'Centro', price: 40000, surface: 91, rooms: '1', baths: 'N/D', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Almacén/cochera con posibilidad de construir vivienda. Riesgo de construcción y licencias, pero con potencial de crear un activo a medida.', tpr: 90500, potential: 'Alto (Value-Add)', link: 'https://es.wallapop.com/item/casa-en-venta-en-aguilas-ciudad-en-aguilas-1141130762'},
-        {id: '013', desc: 'Casa adosada en calle de la Luna', zone: 'Centro', price: 42000, surface: 48, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Planta baja en el centro. Tamaño reducido, pero ideal para alquiler turístico por su ubicación. Sin grandes riesgos aparentes.', tpr: 54000, potential: 'Moderado', link: 'https://www.idealista.com/inmueble/108042003/'},
-        {id: '014', desc: 'Piso en calle Estepona', zone: 'Centro', price: 43000, surface: 104, rooms: '3', baths: '1', elevator: true, reform: true, pool: false, terrace: false, analysis: 'OCUPADO. Riesgo legal muy alto (65% descuento TPR). A pesar de tener ascensor, el estado ocupacional es el factor dominante.', tpr: 45500, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/106683879/'},
-        {id: '015', desc: 'Piso en cl isidoro cierva 43', zone: 'Centro', price: 46500, surface: 91, rooms: '3', baths: 'N/D', elevator: true, reform: true, pool: false, terrace: false, analysis: 'INMUEBLE OCUPADO. Riesgo legal muy alto (65% descuento TPR). Ubicado en planta 5ª, el ascensor es un plus, pero irrelevante hasta la recuperación.', tpr: 39813, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/102104343/'},
-        {id: '016', desc: 'Piso en calle Cañería Alta', zone: 'Centro', price: 48600, surface: 80, rooms: '1', baths: 'N/D', elevator: false, reform: true, pool: false, terrace: false, analysis: 'OCUPADO. Riesgo legal muy alto (65% descuento TPR). Inversión de alto riesgo para especialistas.', tpr: 35000, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/104889647/'},
-        {id: '017', desc: 'Piso en camino del Cementerio', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 52000, surface: 110, rooms: '3', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Oportunidad para inversores. Gran tamaño y bajo precio indican necesidad de reforma. Potencial de valor añadido en zona económica.', tpr: 74800, potential: 'Alto (Value-Add)', link: 'https://www.idealista.com/inmueble/101344421/'},
-        {id: '018', desc: 'Piso en calle Granada, 2', zone: 'Centro', price: 60000, surface: 72, rooms: '2', baths: '1', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Activo equilibrado. Céntrico, con ascensor y balcón. Buen perfil para alquiler a largo plazo o turístico. Sin riesgos aparentes.', tpr: 90000, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/94721531/'},
-        {id: '019', desc: 'Chalet adosado en calle Molino', zone: 'Centro', price: 60000, surface: 80, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Casa con encanto en el casco antiguo cerca de la playa. Con porche y terraza, muy atractiva para el mercado de alquiler vacacional.', tpr: 90000, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/105130487/'},
-        {id: '020', desc: 'Apartamento en Casco Antiguo', zone: 'Centro', price: 49000, surface: 60, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Apartamento en 3ª planta sin ascensor. La terraza es un plus, pero la falta de ascensor limita su valor y mercado.', tpr: 56250, potential: 'Moderado', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-terraza/183181827/d'},
-        {id: '021', desc: 'Piso en calle Estepona', zone: 'Centro', price: 44000, surface: 71, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Edificio de 2006 sin ascensor. Precio bajo, pero la falta de ascensor y terraza reduce su atractivo. Inversión de bajo coste.', tpr: 79875, potential: 'Moderado', link: 'https://www.idealista.com/inmueble/103642542/'},
-        {id: '022', desc: 'Piso en calle cabeza del disco', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 63500, surface: 52, rooms: '2', baths: 'N/D', elevator: false, reform: true, pool: false, terrace: false, analysis: 'INMUEBLE OCUPADO. Riesgo legal y de desahucio muy elevado (65% descuento TPR). El bajo precio refleja la situación legal.', tpr: 15470, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/107946485/'},
-        {id: '023', desc: 'Piso en calle Reina Sofía', zone: 'Centro', price: 69000, surface: 65, rooms: '2', baths: '1', elevator: true, reform: false, pool: false, terrace: false, analysis: '3ª planta con ascensor. Activo sólido para alquiler en zona céntrica. Sin terraza, lo que supone una pequeña penalización.', tpr: 73125, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946486/'},
-        {id: '024', desc: 'Piso en calle Jovellanos, 26', zone: 'Centro', price: 70000, surface: 79, rooms: '2', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Bajo a reformar en casco histórico. Buena oportunidad de "value-add" por su ubicación céntrica y potencial tras la reforma.', tpr: 79000, potential: 'Alto (Value-Add)', link: 'https://www.idealista.com/inmueble/107946484/'},
-        {id: '025', desc: 'Piso en zona Lotería', zone: 'Centro', price: 75000, surface: 65, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: '2ª planta sin ascensor. Precio relativamente alto para un piso sin ascensor ni terraza, lo que reduce su atractivo inversor.', tpr: 73125, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946487/'},
-        {id: '026', desc: 'Piso en camino del Economato', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 76900, surface: 140, rooms: '4', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'SIN POSESIÓN. Riesgo legal muy alto (65% descuento TPR). Gran tamaño, pero la situación posesoria es el factor determinante.', tpr: 41650, potential: 'Muy Alto (solo especialista)', link: 'https://www.idealista.com/inmueble/103642541/'},
-        {id: '027', desc: 'Apartamento en Casco Antiguo', zone: 'Centro', price: 80000, surface: 46, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: '1ª planta con balcón. Tamaño compacto, ideal para alquiler turístico. La falta de ascensor es menos penalizada en una 1ª planta.', tpr: 51750, potential: 'Moderado', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/balcon/189332560/d'},
-        {id: '028', desc: 'Piso en calle de la Gloria, 6', zone: 'Centro', price: 80000, surface: 84, rooms: '3', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Planta baja con patio. La ausencia de escaleras es un plus. Buen activo para alquiler residencial a largo plazo.', tpr: 94500, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946483/'},
-        {id: '029', desc: 'Piso en Delicias', zone: 'Las Delicias', price: 93600, surface: 49, rooms: '3', baths: '1', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Zona Premium (Las Delicias). A pesar del tamaño reducido, la ubicación y el ascensor lo hacen un activo muy atractivo para alquiler.', tpr: 105840, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/191752945/d'},
-        {id: '030', desc: 'Piso en Casco Antiguo', zone: 'Centro', price: 95000, surface: 109, rooms: '3', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Piso luminoso con terraza, a 200m de la playa. La falta de ascensor es el principal inconveniente, pero la terraza lo compensa parcialmente.', tpr: 109000, potential: 'Moderado', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza/191752885/d'},
-        {id: '031', desc: 'Piso en Calle Aire, 80', zone: 'Las Delicias', price: 96000, surface: 101, rooms: '4', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Casa de 3 plantas en zona Delicias. Con terraza y balcón. Excelente activo para alquiler vacacional por su tamaño y ubicación.', tpr: 218160, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza-balcon/187900898/d'},
-        {id: '032', desc: 'Piso en Casco Antiguo', zone: 'Centro', price: 102000, surface: 75, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: '3ª planta sin ascensor. Precio elevado para sus características. El riesgo de liquidez es alto por la falta de ascensor y terraza.', tpr: 65625, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/todas-las-zonas/185244586/d'},
-        {id: '033', desc: 'Piso en Casco Antiguo', zone: 'Centro', price: 105000, surface: 64, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: '2ª planta con ascensor. Activo sólido y sin riesgos aparentes en zona céntrica. Buena opción para alquiler a largo plazo.', tpr: 72000, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/191439268/d'},
-        {id: '034', desc: 'Piso en Avenida Juan Carlos I, 88', zone: 'Centro', price: 114000, surface: 103, rooms: '3', baths: '1', elevator: true, reform: false, pool: false, terrace: false, analysis: '3ª planta con ascensor en una de las avenidas principales. Buena liquidez y potencial de alquiler. Sin riesgos destacables.', tpr: 115875, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/191752955/d'},
-        {id: '035', desc: 'Piso en La Huerta', zone: 'Centro', price: 114000, surface: 87, rooms: '3', baths: '1', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Reformado, con trastero y ascensor. A 500m de la playa. Activo listo para entrar o alquilar, sin necesidad de inversión adicional.', tpr: 97875, potential: 'Bajo', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1140819679'},
-        {id: '036', desc: 'Piso en Centro', zone: 'Centro', price: 115000, surface: 96, rooms: '3', baths: '1', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Con garaje incluido y terraza. Activo muy completo y atractivo. El garaje añade un valor de 12.000€ a la tasación.', tpr: 132000, potential: 'Bajo', link: 'https://www.pisos.com/comprar/piso-aguilas_casco_antiguo-49172310015_109300/'},
-        {id: '037', desc: 'Piso en Puertas de Lorca', zone: 'Centro', price: 117000, surface: 86, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: '1ª planta con ascensor y balcón. Buen estado. Activo de bajo riesgo, ideal para el mercado residencial.', tpr: 96750, potential: 'Bajo', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1143234602'},
-        {id: '038', desc: 'Apartamento en Calle Aire, 60', zone: 'Centro', price: 124000, surface: 80, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Ubicación excelente cerca de la playa, pero la falta de ascensor y terraza le resta competitividad frente a otros activos de la zona.', tpr: 90000, potential: 'Moderado', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/todas-las-zonas/189332561/d'},
-        {id: '039', desc: 'Casa céntrica', zone: 'Centro', price: 125000, surface: 150, rooms: '4', baths: '1', elevator: false, reform: true, pool: false, terrace: true, analysis: 'A REFORMAR. Gran superficie y patio interior. Potencial muy alto tras reforma para crear una vivienda unifamiliar de gran valor en el centro.', tpr: 150000, potential: 'Alto (Value-Add)', link: 'https://es.wallapop.com/item/casa-centrica-1144331186'},
-        {id: '040', desc: 'Casa en Centro', zone: 'Centro', price: 120000, surface: 97, rooms: '4', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Vivienda de dos plantas en buen estado, zona Placetón. Buena opción para familias o para dividir en dos unidades de alquiler.', tpr: 109125, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946482/'},
-        {id: '041', desc: 'Dúplex en Centro', zone: 'Centro', price: 185000, surface: 180, rooms: '4', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Dúplex amplio con garaje incluido. La falta de ascensor puede ser un problema para algunos perfiles, pero el garaje es un gran plus.', tpr: 214500, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza-ascensor/188457639/d'},
-        {id: '042', desc: 'Chalet junto a Av. Juan Carlos I', zone: 'Centro', price: 130000, surface: 126, rooms: '3', baths: '1', elevator: false, reform: true, pool: false, terrace: true, analysis: 'A REFORMAR. Chalet con terraza y patio. Excelente oportunidad de valor añadido en una ubicación principal.', tpr: 126000, potential: 'Alto (Value-Add)', link: 'https://es.wallapop.com/item/chalet-en-venta-en-aguilas-ciudad-en-aguilas-1144743721'},
-        {id: '043', desc: 'Piso en Centro', zone: 'Centro', price: 134000, surface: 112, rooms: '4', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Próximo a Residencia San Francisco. Piso amplio con ascensor, ideal para familias. La falta de terraza le resta algo de atractivo.', tpr: 126000, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946481/'},
-        {id: '044', desc: 'Piso en Calle Ramón y Cajal, 22', zone: 'Centro', price: 135000, surface: 110, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Activo muy similar al ID 043. Sólido, sin riesgos, pero sin el extra de un espacio exterior. Buena opción para el mercado residencial.', tpr: 123750, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/191599388/d'},
-        {id: '045', desc: 'Piso en Calle Aire, 111', zone: 'Las Delicias', price: 138500, surface: 115, rooms: '3', baths: '1', elevator: true, reform: false, pool: false, terrace: true, analysis: 'PRIMERA LÍNEA DE PLAYA. Ubicación premium. Con ascensor y terraza. Activo de alta demanda para alquiler turístico. Excelente inversión.', tpr: 262200, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza-ascensor/174983050/d'},
-        {id: '046', desc: 'Piso en Calle Francisco Díaz Romero, 22', zone: 'Centro', price: 140000, surface: 130, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Otro piso amplio con ascensor en el centro. La competencia en este segmento es alta; el precio debe ser competitivo.', tpr: 146250, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/181515712/d'},
-        {id: '047', desc: 'Piso en Calle Aire, 60', zone: 'Centro', price: 144000, surface: 111, rooms: '4', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: '1ª planta sin ascensor, pero con balcón y reformado. A 130m de la playa. Atractivo para alquiler, aunque la falta de ascensor es un punto débil.', tpr: 124875, potential: 'Moderado', link: 'https://www.idealista.com/inmueble/107946480/'},
-        {id: '048', desc: 'Apartamento en C/ de Juan Ramon Jimenez, 23', zone: 'Las Lomas - Las Yucas', price: 185000, surface: 75, rooms: '2', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Zona alta (Las Lomas). A 200m de la playa de Poniente. Con ascensor y balcón. Activo de calidad para segunda residencia o alquiler.', tpr: 135000, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-ascensor/191439269/d'},
-        {id: '049', desc: 'Piso en Casco Antiguo', zone: 'Centro', price: 150000, surface: 123, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Piso amplio con ascensor y balcón. Características muy demandadas. Sólida inversión para el mercado residencial o de alquiler.', tpr: 138375, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-ascensor/189723709/d'},
-        {id: '050', desc: 'Piso en Zona del Lidl', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 148000, surface: 110, rooms: '3', baths: '2', elevator: true, reform: false, pool: true, terrace: true, analysis: 'Activo muy completo con ascensor, terraza y piscina comunitaria. Excelente para familias. A pesar de estar en zona económica, los extras lo revalorizan.', tpr: 93500, potential: 'Bajo', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1140798644'},
-        {id: '051', desc: 'Piso en Plaza Doctor Calero', zone: 'Centro', price: 150000, surface: 134, rooms: '4', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Piso muy grande, céntrico, con ascensor y terraza. Ideal para una familia grande o para segregar en dos unidades (sujeto a normativa).', tpr: 150750, potential: 'Bajo', link: 'https://www.victoriafincas.com/inmueble/834/piso-venta-plaza-doctor-calero-aguilas/'},
-        {id: '052', desc: 'Casa en Centro', zone: 'Centro', price: 150000, surface: 235, rooms: '4', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Casa unifamiliar de gran tamaño con terraza. Sin ascensor, pero al ser casa propia no es un factor tan crítico. Buen estado.', tpr: 264375, potential: 'Bajo', link: 'https://es.wallapop.com/item/chalet-en-venta-en-aguilas-ciudad-en-aguilas-1140799841'},
-        {id: '053', desc: 'Piso en Casco Antiguo', zone: 'Centro', price: 150000, surface: 134, rooms: '4', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: '4ª planta con ascensor y terraza. Características muy positivas. Activo con alta liquidez y atractivo para un amplio espectro de compradores.', tpr: 150750, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza-ascensor/191752948/d'},
-        {id: '054', desc: 'Piso en Centro', zone: 'Centro', price: 155000, surface: 80, rooms: '3', baths: '2', elevator: true, reform: false, pool: true, terrace: true, analysis: 'Con ascensor, piscina y terraza. Un activo muy completo que destaca en el centro de la ciudad. Ideal para alquiler turístico de alta gama.', tpr: 90000, potential: 'Bajo', link: 'https://www.victoriafincas.com/inmueble/583/piso-venta-centro-aguilas/'},
-        {id: '055', desc: 'Piso en Delicias', zone: 'Las Delicias', price: 155000, surface: 77, rooms: '1', baths: '1', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Apartamento nuevo a estrenar en zona Delicias. A pesar de ser de 1 hab, la ubicación premium, terraza y ascensor lo hacen muy atractivo.', tpr: 166320, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-terraza-ascensor-balcon/191752946/d'},
-        {id: '056', desc: 'Piso en calle Armando Muñoz Calero', zone: 'Centro', price: 155000, surface: 108, rooms: '4', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: '5ª planta con ascensor y garaje incluido. Muy espacioso. La falta de terraza es su único punto débil. El garaje añade 12.000€ de valor.', tpr: 133500, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946479/'},
-        {id: '057', desc: 'Casa campo con parcela', zone: 'Las Majadas - Las Molinetas - Labradorcico', price: 160000, surface: 110, rooms: '2', baths: '1', elevator: false, reform: false, pool: true, terrace: true, analysis: 'Casa de campo con piscina y gran parcela. Atractivo para quienes buscan tranquilidad fuera del núcleo urbano. El precio parece ajustado.', tpr: 93500, potential: 'Moderado', link: 'https://es.wallapop.com/item/casa-campo-con-parcela-1141676827'},
-        {id: '058', desc: 'Piso en calle Rey Carlos III', zone: 'Centro', price: 168000, surface: 94, rooms: '4', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'A 200m de la playa, con ascensor y terraza. Combina ubicación, tamaño y comodidades. Activo de bajo riesgo y alta demanda.', tpr: 105750, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946478/'},
-        {id: '060', desc: 'Apartamento en Delicias', zone: 'Las Delicias', price: 176000, surface: 75, rooms: '2', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Apartamento reformado en zona Delicias. Con terraza y ascensor. Ideal para alquiler vacacional de calidad.', tpr: 162000, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza-ascensor/188457639/d'},
-        {id: '061', desc: 'Ático en Isla del Fraile', zone: 'El Hornillo', price: 195000, surface: 109, rooms: '2', baths: '2', elevator: true, reform: false, pool: true, terrace: true, analysis: 'Ático en zona Premium (Isla del Fraile). Con terraza, piscina y garaje. Activo de lujo con alto potencial de rentabilidad.', tpr: 273600, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-terraza-ascensor/190800768/d'},
-        {id: '062', desc: 'Piso en Calle Francisco Díaz Romero, 22', zone: 'Centro', price: 140000, surface: 130, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Piso amplio con ascensor. Sin terraza. El precio es competitivo para la superficie y ubicación.', tpr: 146250, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/181650393/d'},
-        {id: '063', desc: 'Piso en Casco Antiguo', zone: 'Centro', price: 135000, surface: 110, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Similar a otros activos céntricos. Con ascensor, pero sin espacio exterior. Sólido para el mercado residencial.', tpr: 123750, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-ascensor/188688849/d'},
-        {id: '064', desc: 'Dúplex en Centro', zone: 'Centro', price: 185000, surface: 180, rooms: '4', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Amplio dúplex con garaje. La falta de ascensor es su principal desventaja, pero el tamaño y el garaje son puntos fuertes.', tpr: 214500, potential: 'Bajo', link: 'https://www.pisos.com/comprar/duplex-aguilas_casco_antiguo-48390562379_100500/'},
-        {id: '065', desc: 'Apartamento en C/ de Juan Ramon Jimenez, 23', zone: 'Las Lomas - Las Yucas', price: 185000, surface: 75, rooms: '2', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Apartamento en zona alta con ascensor y terraza. Buena opción para segunda residencia en una zona tranquila y de calidad.', tpr: 135000, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/todas-las-zonas/191752956/d'},
-        {id: '066', desc: 'Dúplex en Casco Antiguo', zone: 'Centro', price: 186500, surface: 180, rooms: '4', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Dúplex con parking. Similar al ID 064. Activo espacioso para familias que no valoren el ascensor como un factor crítico.', tpr: 214500, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking/187652702/d'},
-        {id: '067', desc: 'Casa en Centro', zone: 'Centro', price: 180000, surface: 143, rooms: '3', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Vivienda de dos plantas en el corazón de Águilas. Singular y con carácter. Buena opción para quien busca una casa independiente céntrica.', tpr: 160875, potential: 'Bajo', link: 'https://www.idealista.com/inmueble/107946477/'},
-        {id: '068', desc: 'Ático en Isla del Fraile', zone: 'El Hornillo', price: 195000, surface: 109, rooms: '2', baths: '2', elevator: true, reform: false, pool: true, terrace: true, analysis: 'Activo premium. Ático en urbanización de lujo con todos los extras: ascensor, terraza, piscina y garaje. Inversión segura y rentable.', tpr: 273600, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking-terraza-ascensor/191280802/d'},
-        {id: '069', desc: 'Apartamento en Los Geráneos', zone: 'Los Geráneos', price: 195000, surface: 105, rooms: '2', baths: '2', elevator: false, reform: false, pool: true, terrace: true, analysis: 'Ático con piscina comunitaria y terraza. La falta de ascensor es un riesgo importante para un ático, penalizando su valoración.', tpr: 168000, potential: 'Moderado', link: 'https://www.pisos.com/comprar/apartamento-aguilas_los_geraneos30889-53387716270_101800/'},
-        {id: '070', desc: 'Planta baja en Casco Antiguo', zone: 'Centro', price: 200000, surface: 226, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Vivienda muy espaciosa de dos plantas con garaje. Ideal para uso mixto (vivienda y profesional) por su gran tamaño.', tpr: 254250, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/parking/186591077/d'},
-        {id: '072', desc: 'Finca rústica en zona de Tébar', zone: 'Tébar - Los Arejos', price: 169000, surface: 152, rooms: '2', baths: '1', elevator: false, reform: false, pool: true, terrace: true, analysis: 'Finca rústica reformada con piscina y parcela. Atractiva para alquiler rural o para compradores que buscan aislamiento.', tpr: 0, potential: 'Moderado', link: 'https://www.idealista.com/inmueble/107946488/'},
-        {id: '073', desc: 'Piso en Centro', zone: 'Centro', price: 120000, surface: 70, rooms: '3', baths: '1', elevator: false, reform: false, pool: false, terrace: false, analysis: 'Piso en 3ª planta sin ascensor. El precio parece elevado dadas las limitaciones de accesibilidad y falta de extras.', tpr: 78750, potential: 'Bajo', link: 'https://www.victoriafincas.com/inmueble/748/piso-venta-centro-aguilas/'},
-        {id: '074', desc: 'Piso en Las Lomas-Las Yucas', zone: 'Las Lomas - Las Yucas', price: 129000, surface: 70, rooms: '2', baths: '1', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Apartamento con balcón y ascensor en zona alta. A 200m de la playa. Buena combinación de características para inversión.', tpr: 126000, potential: 'Bajo', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/ascensor/191752956/d'},
-        {id: '075', desc: 'Ático en Los Geráneos', zone: 'Los Geráneos', price: 195000, surface: 100, rooms: '3', baths: '3', elevator: false, reform: false, pool: true, terrace: true, analysis: 'Ático con terraza y piscina. La falta de ascensor es un factor de riesgo muy significativo que reduce drásticamente su valor de mercado.', tpr: 156000, potential: 'Alto', link: 'https://www.fotocasa.es/es/comprar/vivienda/aguilas/terraza/190059344/d'},
-        {id: '076', desc: 'Piso en Centro', zone: 'Centro', price: 50000, surface: 68, rooms: '2', baths: '2', elevator: false, reform: true, pool: false, terrace: false, analysis: 'SIN POSESIÓN. Riesgo legal muy alto (65% descuento TPR). Precio muy bajo que refleja la imposibilidad de visitar y la incertidumbre.', tpr: 29750, potential: 'Muy Alto (solo especialista)', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1143393460'},
-        {id: '077', desc: 'Piso en zona del castillo', zone: 'Centro', price: 115000, surface: 70, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Totalmente reformado, con balcón. La falta de ascensor es su principal desventaja. Buena opción para alquiler turístico.', tpr: 78750, potential: 'Moderado', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1142357770'},
-        {id: '078', desc: 'Apartamento cerca de playa poniente', zone: 'Centro', price: 120000, surface: 65, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Planta baja con patio. La accesibilidad y el espacio exterior son puntos fuertes. Ideal para alquiler o segunda residencia.', tpr: 73125, potential: 'Bajo', link: 'https://es.wallapop.com/item/apartamento-en-venta-en-aguilas-murcia-1142014676'},
-        {id: '079', desc: 'Piso en Centro', zone: 'Centro', price: 135000, surface: 110, rooms: '3', baths: '2', elevator: false, reform: true, pool: false, terrace: false, analysis: 'Sin ascensor y a reformar. El precio parece alto para un activo que requiere una inversión adicional significativa y tiene limitaciones de acceso.', tpr: 99000, potential: 'Alto (Value-Add)', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1141787239'},
-        {id: '080', desc: 'Piso cerca de Playa de la Colonia', zone: 'Centro', price: 155500, surface: 85, rooms: '3', baths: '2', elevator: true, reform: false, pool: false, terrace: false, analysis: 'Planta baja con ascensor (acceso al garaje). A 100m de la playa. Activo muy sólido y bien ubicado, sin riesgos aparentes.', tpr: 95625, potential: 'Bajo', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1141778698'},
-        {id: '081', desc: 'Piso céntrico a 240m de la playa', zone: 'Centro', price: 155000, surface: 108, rooms: '4', baths: '2', elevator: true, reform: true, pool: false, terrace: true, analysis: 'Semireformado. Con ascensor, terraza y garaje. Activo muy completo con alto potencial tras finalizar la reforma.', tpr: 132300, potential: 'Moderado (Value-Add)', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1141511288'},
-        {id: '082', desc: 'Piso cerca de la colonia', zone: 'Centro', price: 105000, surface: 77, rooms: '3', baths: '2', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Sin ascensor. El balcón es un punto a favor, pero la falta de ascensor limita su valor de mercado.', tpr: 77963, potential: 'Moderado', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1141456245'},
-        {id: '083', desc: 'Piso en zona del placetón', zone: 'Centro', price: 73000, surface: 79, rooms: '2', baths: '1', elevator: false, reform: true, pool: false, terrace: false, analysis: 'A REFORMAR. Bajo sin ascensor. Oportunidad de valor añadido en una ubicación muy céntrica.', tpr: 79000, potential: 'Alto (Value-Add)', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1140805423'},
-        {id: '084', desc: 'Chalet cerca del Molino de Sagrera', zone: 'Centro', price: 105000, surface: 74, rooms: '2', baths: '1', elevator: false, reform: false, pool: false, terrace: true, analysis: 'Con terraza y en buen estado. Buena opción de vivienda unifamiliar a un precio competitivo en el centro.', tpr: 83250, potential: 'Bajo', link: 'https://es.wallapop.com/item/chalet-en-venta-en-aguilas-ciudad-en-aguilas-1140801133'},
-        {id: '085', desc: 'Piso a 200m de la playa', zone: 'Centro', price: 168000, surface: 108, rooms: '4', baths: '2', elevator: true, reform: false, pool: false, terrace: true, analysis: 'Piso amplio, con ascensor y terraza, cerca de la playa. Activo de alta calidad y bajo riesgo, ideal para el mercado residencial.', tpr: 121500, potential: 'Bajo', link: 'https://es.wallapop.com/item/piso-en-venta-en-aguilas-ciudad-en-aguilas-1140796461'},
-    ].filter(p => p.tpr !== 0 && p.tpr !== null); // Filter out items without TPR (terrenos, etc.)
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- DOM Element References ---
-        const propertyGrid = document.getElementById('property-grid');
-        const propertyCount = document.getElementById('propertyCount');
-        const noResultsDiv = document.getElementById('no-results');
-        const priceRange = document.getElementById('priceRange');
-        const priceValue = document.getElementById('priceValue');
-        const searchText = document.getElementById('searchText');
-        const zoneFiltersContainer = document.getElementById('zoneFilters');
-        const potentialFiltersContainer = document.getElementById('potentialFilters');
-        const sortBy = document.getElementById('sortBy');
-        const resetFiltersBtn = document.getElementById('resetFilters');
-        const filtersForm = document.getElementById('filters-form');
-
-        // --- Helper Functions ---
-        const formatCurrency = (value) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
-        const potentialOrder = { 'Muy Alto (solo especialista)': 1, 'Alto (Value-Add)': 2, 'Alto': 3, 'Moderado': 4, 'Moderado (Value-Add)': 5, 'Bajo': 6 };
-        const cleanPotential = (pot) => pot.split('(')[0].trim();
-
-        // --- Dynamic Filter Population ---
-        function populateFilters() {
-            const zones = [...new Set(propertiesData.map(p => p.zone))].sort();
-            zones.forEach(zone => {
-                const label = document.createElement('label');
-                label.className = 'flex items-center text-sm text-slate-600 cursor-pointer';
-                label.innerHTML = `
-                    <input type="checkbox" class="filter-zone h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" value="${zone}" checked>
-                    <span class="ml-2">${zone}</span>`;
-                zoneFiltersContainer.appendChild(label);
-            });
-
-            const potentials = [...new Set(propertiesData.map(p => p.potential))].sort((a, b) => potentialOrder[a] - potentialOrder[b]);
-            potentials.forEach(pot => {
-                const label = document.createElement('label');
-                label.className = 'flex items-center text-sm text-slate-600 cursor-pointer';
-                label.innerHTML = `
-                    <input type="checkbox" class="filter-potential h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" value="${pot}" checked>
-                    <span class="ml-2">${pot}</span>`;
-                potentialFiltersContainer.appendChild(label);
-            });
-        }
-
-        // --- Rendering Logic ---
-        function renderProperties(properties) {
-            propertyGrid.innerHTML = ''; // Clear previous results
-            propertyCount.textContent = properties.length;
-            noResultsDiv.classList.toggle('hidden', properties.length > 0);
-
-            const potentialColorClasses = {
-                'Muy Alto (solo especialista)': 'potential-muy-alto bg-violet-50',
-                'Alto (Value-Add)': 'potential-alto bg-pink-50',
-                'Alto': 'potential-alto bg-pink-50',
-                'Moderado': 'potential-moderado bg-orange-50',
-                'Moderado (Value-Add)': 'potential-moderado bg-orange-50',
-                'Bajo': 'potential-bajo bg-green-50'
-            };
-
-            properties.forEach(p => {
-                const card = document.createElement('div');
-                card.className = `bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col border-l-4 ${potentialColorClasses[p.potential] || 'border-slate-300'}`;
-
-                card.innerHTML = `
-                    <div class="p-4 flex-grow">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-base md:text-lg text-slate-800 leading-tight pr-2">${p.desc}</h3>
-                            <span class="text-xs font-bold py-1 px-2.5 rounded-full bg-slate-200 text-slate-700">${p.id}</span>
-                        </div>
-                        <p class="text-sm text-slate-500 mb-4">${p.zone}</p>
-
-                        <div class="grid grid-cols-3 gap-x-2 gap-y-3 text-center mb-4">
-                            <div class="bg-slate-50 p-2 rounded-lg">
-                                <div class="text-xs text-slate-500">Precio Venta</div>
-                                <div class="font-bold text-slate-900">${formatCurrency(p.price)}</div>
-                            </div>
-                            <div class="bg-slate-50 p-2 rounded-lg">
-                                <div class="text-xs text-slate-500">Tasación</div>
-                                <div class="font-bold text-slate-900">${formatCurrency(p.tpr)}</div>
-                            </div>
-                            <div class="bg-slate-50 p-2 rounded-lg">
-                                <div class="text-xs text-slate-500">Superficie</div>
-                                <div class="font-bold text-slate-900">${p.surface} m²</div>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-center space-x-4 text-slate-600 text-sm mb-4 border-y border-slate-100 py-2">
-                            <span><i class="fa-solid fa-bed w-4 mr-1 text-blue-500"></i> ${p.rooms}</span>
-                            <span><i class="fa-solid fa-bath w-4 mr-1 text-blue-500"></i> ${p.baths}</span>
-                             ${p.elevator ? '<span><i class="fa-solid fa-elevator w-4 mr-1 text-green-500" title="Ascensor"></i></span>' : ''}
-                             ${p.terrace ? '<span><i class="fa-solid fa-sun w-4 mr-1 text-yellow-500" title="Terraza"></i></span>' : ''}
-                             ${p.pool ? '<span><i class="fa-solid fa-person-swimming w-4 mr-1 text-cyan-500" title="Piscina"></i></span>' : ''}
-                             ${p.reform ? '<span><i class="fa-solid fa-screwdriver-wrench w-4 mr-1 text-orange-500" title="Reforma Necesaria"></i></span>' : ''}
-                        </div>
-                        
-                        <div class="text-xs p-3 rounded-lg bg-gray-50 border border-gray-200">
-                            <p class="font-semibold text-gray-800">Análisis:</p>
-                            <p class="text-gray-600 leading-snug">${p.analysis}</p>
-                        </div>
-                    </div>
-                    <div class="p-3 mt-auto bg-slate-50 border-t border-slate-200 flex justify-between items-center">
-                        <div>
-                           <span class="font-semibold text-xs">Potencial:</span>
-                           <span class="font-bold text-sm">${cleanPotential(p.potential)}</span>
-                        </div>
-                        <a href="${p.link}" target="_blank" class="text-sm bg-blue-600 text-white font-semibold py-1.5 px-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                           Ver <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs"></i>
-                        </a>
-                    </div>
-                `;
-                propertyGrid.appendChild(card);
-            });
-        }
-        
-        // --- Filtering and Sorting Logic ---
-        function applyFiltersAndSort() {
-            // Get all filter values
-            const maxPrice = Number(priceRange.value);
-            const searchTerm = searchText.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            
-            const selectedZones = [...document.querySelectorAll('.filter-zone:checked')].map(el => el.value);
-            const selectedPotentials = [...document.querySelectorAll('.filter-potential:checked')].map(el => el.value);
-            const selectedFeatures = [...document.querySelectorAll('.feature-checkbox:checked')].map(el => el.dataset.feature);
-
-            // Filter the data
-            let filtered = propertiesData.filter(p => {
-                const textMatch = p.desc.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchTerm);
-                const priceMatch = p.price <= maxPrice;
-                const zoneMatch = selectedZones.includes(p.zone);
-                const potentialMatch = selectedPotentials.includes(p.potential);
-                const featuresMatch = selectedFeatures.every(feature => {
-                    if (feature === 'ascensor') return p.elevator;
-                    if (feature === 'terraza') return p.terrace;
-                    if (feature === 'piscina') return p.pool;
-                    if (feature === 'reforma') return p.reform;
-                    return true;
-                });
-
-                return textMatch && priceMatch && zoneMatch && potentialMatch && featuresMatch;
-            });
-
-            // Sort the filtered data
-            const sortValue = sortBy.value;
-            filtered.sort((a, b) => {
-                switch (sortValue) {
-                    case 'price-asc': return a.price - b.price;
-                    case 'price-desc': return b.price - a.price;
-                    case 'tpr-asc': return a.tpr - b.tpr;
-                    case 'tpr-desc': return b.tpr - a.tpr;
-                    case 'potential-asc': return potentialOrder[a.potential] - potentialOrder[b.potential];
-                    default: return 0; // 'default' or 'relevance'
-                }
-            });
-
-            renderProperties(filtered);
-        }
-
-        // --- Setup Event Listeners ---
-        function setupEventListeners() {
-            // Attach listeners to all filter controls
-            filtersForm.addEventListener('input', applyFiltersAndSort);
-            filtersForm.addEventListener('change', applyFiltersAndSort);
-
-            // Live update for the price range value display
-            priceRange.addEventListener('input', () => {
-                priceValue.textContent = formatCurrency(priceRange.value);
-            });
-            
-            sortBy.addEventListener('change', applyFiltersAndSort);
-            
-            resetFiltersBtn.addEventListener('click', () => {
-                filtersForm.reset();
-                 // Manually re-check all dynamic checkboxes
-                document.querySelectorAll('.filter-zone, .filter-potential').forEach(cb => cb.checked = true);
-                // Trigger updates after reset
-                priceValue.textContent = formatCurrency(200000);
-                applyFiltersAndSort();
-            });
-        }
-
-        // --- Initialisation ---
-        populateFilters();
-        setupEventListeners();
-        applyFiltersAndSort(); // Initial render on page load
-    });
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
